@@ -8,6 +8,7 @@
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -166,10 +167,6 @@
             align-items: center;
         }
 
-        #header-middle p {
-            margin: 0 10px;
-        }
-
         #update-location {
             padding: 10px 20px;
             font-size: 16px;
@@ -213,12 +210,27 @@
                     <span></span>
                     <span></span>
                     <ul id="menu">
-                        <li><button id="jamButton" class="btn btn-success">View Jam Mates</button></li>
-                        <li><a href="/new-question">Add a Question</a></li>
-                        <li><button id="logoutButton" class="btn btn-danger">Logout</button></li>
+                        <li>
+                            <button id="jamButton" class="btn btn-success">
+                                <i class="fas fa-user-friends"></i> View Jam Mates
+                            </button>
+                        </li>
+                        <li>
+                            <button id="messagesButton" class="btn btn-warning">
+                                <i class="fas fa-bell"></i> Notifications
+                            </button>
+                        </li>
+                        <li>
+                            <button id="logoutButton" class="btn btn-danger">
+                                <i class="fas fa-running"></i> Logout
+                            </button>
+                        </li>
                     </ul>
                 </div>
             </div>
+        </div>
+        <div class="spinner-container" id="spinnerContainer">
+            <div class="spinner"></div>
         </div> 
         <div class="profile-info">
             <div class="user-details">
@@ -246,6 +258,8 @@
 
     <script>
         window.onload = async function() {
+            document.getElementById('spinnerContainer').style.display = 'flex';
+
             try {
                 const token = localStorage.getItem('token');
                 const response = await fetch('/api/profile', {
@@ -342,6 +356,8 @@
                     toastr.error("Error in updating preferences. Please try again.");
                 }
             });
+            
+            document.getElementById('spinnerContainer').style.display = 'none';
         }
 
         function renderPreferencesForm(preferences) {
@@ -349,7 +365,7 @@
             const listeningForm = document.getElementById('user-listening-form');
             const form = document.getElementById('forms');
             const headerMiddle = document.getElementById('header-middle');
-
+            
             const categories = {
                 Strings: ["Violin", "Viola", "Cello", "Double Bass", "Guitar", "Harp", "Banjo", "Mandolin", "Ukulele"],
                 Woodwinds: ["Flute", "Clarinet", "Oboe", "Bassoon", "Saxophone", "Piccolo", "English Horn"],
@@ -501,6 +517,7 @@
                 categoryDiv.className = 'category';
                 categoryDiv.id = "category " + category;
                 categoryDiv.textContent = `${category} ${instrumentSymbols[category]}`;
+                categoryDiv.style = "background: linear-gradient(135deg, rgba(255, 165, 0, 0.225) 0%, rgba(173, 216, 230, 0.487) 100%);";
                 categoryDiv.onclick = () => toggleInstrumentsList(category);
 
                 const instrumentsListDiv = document.createElement('div');
@@ -511,6 +528,7 @@
                 headerCategory.className = "music-name-profile-category";
                 headerCategory.textContent = category;
                 headerCategory.onclick = () => toggleInstrumentsListAbove(category);
+                headerCategory.style = "color: white; margin-top: 50px;";
                 headerMiddle.appendChild(headerCategory);
                 
                 categories[category].forEach(instrument => {
@@ -554,6 +572,7 @@
                 categoryDiv.className = 'category';
                 categoryDiv.id = "category " + category;
                 categoryDiv.textContent = category;
+                categoryDiv.style = "background: linear-gradient(135deg, rgba(255, 165, 0, 0.225) 0%, rgba(173, 216, 230, 0.487) 100%);";
                 categoryDiv.onclick = () => toggleInstrumentsList(category);
 
                 const instrumentsListDiv = document.createElement('div');
@@ -611,6 +630,10 @@
 
         document.getElementById('jamButton').addEventListener('click', () => {
             window.location.href = '/users';
+        });
+
+        document.getElementById('messagesButton').addEventListener('click', () => {
+            window.location.href = '/messages';
         });
     </script>
 </body>

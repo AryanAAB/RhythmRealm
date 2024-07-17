@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rhythm Realm</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "3000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+    </script>
+</head>
+<body>
+    <div class="content">
+        <div class="header">
+            <div class="logo-container">
+                <a href="/profile" class="logo">
+                    <img src="images/logo.jpeg" alt="Rhythm Realm" class="logoImage">
+                </a>
+            </div>
+            <p class="music-name-profile">Rhythm Realm Messages</p>
+            <div id="header-middle"></div>
+            <div class="header-right">
+                <div class="menu-toggle" id="menuToggle">
+                    <input type="checkbox" />
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <ul id="menu">
+                        <li>
+                            <button id="profileButton" class="btn btn-success">
+                                <i class="fas fa-user"></i> Your Profile
+                            </button>
+                        </li>
+                        <li>
+                            <button id="jamButton" class="btn btn-warning">
+                                <i class="fas fa-user-friends"></i> View Jam Mates
+                            </button>
+                        </li>
+                        <li>
+                            <button id="logoutButton" class="btn btn-danger">
+                                <i class="fas fa-running"></i> Logout
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="spinner-container" id="spinnerContainer">
+            <div class="spinner"></div>
+        </div>
+        <div class="messagesContainer">
+            <h2>Sent Messages</h2>
+            <div id="sentMessages"></div>
+
+            <h2>Received Messages</h2>
+            <div id="receivedMessages"></div>
+
+            <h2>Archived Messages</h2>
+            <div id="archivedMessages"></div>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 Rhythm Realm. All rights reserved.</p>
+        </div>
+    </div>
+    <script>
+        window.onload = async function() {
+            document.getElementById('spinnerContainer').style.display = 'flex';
+            
+            fetchMessages("api/messages/sent", 'sentMessages', true);
+            fetchMessages("api/messages/received", 'receivedMessages', false);
+            fetchMessages("api/messages/archived", 'archivedMessages', true);
+                
+            document.getElementById('spinnerContainer').style.display = 'none';
+        };
+
+        async function fetchMessages(url, elementId, noButton) {
+            let messages = null;
+
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch profile');
+                }
+
+                let data = await response.json();
+                messages = data.message;
+            } catch (error) {
+                localStorage.setItem('failed', true);
+                window.location.href = '/';
+            }  
+            
+            const container = document.getElementById(elementId);
+            container.innerHTML = '';
+
+            if (messages.length === 0) {
+                container.innerHTML = '<p>No messages found.</p>';
+            } else {
+                messages.forEach(message => {
+                    const messageElement = document.createElement('div');
+                    messageElement.className = 'message';
+                    messageElement.innerHTML = `
+                        <p><strong>From:</strong> ${message.sender.username}</p>
+                        <p><strong>To:</strong> ${message.recipient.username}</p>
+                        <p><strong>Message:</strong> ${message.message}</p>
+                        ${noButton && message.accepted === null? 
+                        `<p><strong>Response:</strong> Not Yet Accepted or Declined</p>` : 
+                        noButton ? 
+                        `<p><strong>Response:</strong> ${message.accepted ? 'Accepted' : 'Declined'}</p>` : 
+                        message.accepted === null ? `
+                            <button onclick="respondToMessage('${message._id}', true)" class="btn btn-success">Accept</button>
+                            <button onclick="respondToMessage('${message._id}', false)" class="btn btn-danger">Decline</button>
+                        ` : `
+                            <p><strong>Response:</strong> ${message.accepted ? 'Accepted' : 'Declined'}</p>
+                        `}
+                    `;
+                    container.appendChild(messageElement);
+                });
+            }
+        };
+
+        async function respondToMessage(messageId, accepted) {
+            document.getElementById('spinnerContainer').style.display = 'flex';
+            
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`/api/messages/respond/${messageId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ accepted })
+                });
+
+                if (response.ok) {
+                    toastr.success('Response recorded successfully.');
+                    fetchMessages("api/messages/received", 'receivedMessages', false);
+                    fetchMessages("api/messages/archived", 'archivedMessages', true);
+                } else {
+                    throw new Error('Failed to respond to message.');
+                }
+            } catch (error) {
+                console.error('Failed to respond to message:', error);
+                toastr.error('Failed to respond to message. Try again later.');
+            }
+
+            document.getElementById('spinnerContainer').style.display = 'none';
+        }
+
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            var menu = document.getElementById('menu');
+            var checkbox = document.querySelector('.menu-toggle input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            if (checkbox.checked) {
+                menu.style.display = 'block';
+            } else {
+                menu.style.display = 'none';
+            }
+        });
+        document.addEventListener('click', function(event) {
+            var isClickInsideMenu = menu.contains(event.target);
+            var isClickOnToggle = menuToggle.contains(event.target);
+            if (!isClickInsideMenu && !isClickOnToggle) {
+                menu.style.display = 'none';
+                var checkbox = document.querySelector('.menu-toggle input[type="checkbox"]');
+                checkbox.checked = false;
+            }
+        });
+
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = '/';
+        });
+        document.getElementById('profileButton').addEventListener('click', () => {
+            window.location.href = '/profile';
+        });
+        document.getElementById('jamButton').addEventListener('click', () => {
+            window.location.href = '/users';
+        });
+    </script>
+</body>

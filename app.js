@@ -45,6 +45,10 @@ app.get('/users', (req, res) => {
   res.render('users');
 });
 
+app.get('/messages', (req, res) => {
+  res.render('messages');
+})
+
 mongoose.connect(MONGODB_URI, {})
   .then(() => {
     console.log('Connected to MongoDB');

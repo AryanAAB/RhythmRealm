@@ -8,6 +8,7 @@
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -76,14 +77,28 @@
                     <span></span>
                     <span></span>
                     <ul id="menu">
-                        <li><button id="profileButton" class="btn btn-success">Your Profile</button></li>
-                        <li><a href="/new-question">Add a Question</a></li>
-                        <li><button id="logoutButton" class="btn btn-danger">Logout</button></li>
+                        <li>
+                            <button id="profileButton" class="btn btn-success">
+                                <i class="fas fa-user"></i> Your Profile
+                            </button>
+                        </li>
+                        <li>
+                            <button id="messagesButton" class="btn btn-warning">
+                                <i class="fas fa-bell"></i> Notifications
+                            </button>
+                        </li>
+                        <li>
+                            <button id="logoutButton" class="btn btn-danger">
+                                <i class="fas fa-running"></i> Logout
+                            </button>
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
-        
+        <div class="spinner-container" id="spinnerContainer">
+            <div class="spinner"></div>
+        </div>
         <div class="profile-table">
             <h2>Jam Mates Profiles</h2>
             <table id="profileTable" class="table">
@@ -137,6 +152,8 @@
         }
 
         window.onload = async function() {
+            document.getElementById('spinnerContainer').style.display = 'flex';
+
             try {
                 const token = localStorage.getItem('token');
                 const response = await fetch('/api/users', {
@@ -245,6 +262,8 @@
                     row.innerHTML = `<td colspan="5">No users found.</td>`;
                     tableBody.appendChild(row);
                 }
+
+                document.getElementById('spinnerContainer').style.display = 'none';
             } catch (error) {
                 localStorage.setItem('failed', true);
                 window.location.href = '/';
@@ -278,6 +297,9 @@
         });
         document.getElementById('profileButton').addEventListener('click', () => {
             window.location.href = '/profile';
+        });
+        document.getElementById('messagesButton').addEventListener('click', () => {
+            window.location.href = '/messages';
         });
     </script>
 </body>
