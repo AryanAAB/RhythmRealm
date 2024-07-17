@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rhythm Realm</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "3000",
+            "timeOut": "2000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+    </script>
+</head>
+<body>
+    <div class="content">
+        <div class="header">
+            <div class="logo-container">
+                <a href="/" class="logo">
+                    <img src="images/logo.jpeg" alt="Rhythm Realm" class="logoImage">
+                </a>
+            </div>
+            <p class="music-name">Rhythm Realm Sign Up</p>
+            <div class="header-right">
+                <a class="active" href="/">Home</a>
+                <a href="#">Login</a>
+            </div>
+        </div>
+    <div class="form-container">
+        <h2>User Registration</h2>
+        <form id="signup-form">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <input type="text" id="location" name="location" placeholder="Location"required><br>
+        <button type="submit">Register</button>
+        <p class="error-message" id="register-error"></p>
+        </form>
+    </div>
+    <div class="spinner-container" id="spinner-container">
+        <div class="spinner"></div>
+    </div>
+    <div class="footer">
+        <p>&copy; 2024 Rhythm Realm. All rights reserved.</p>
+    </div>
+    <script>
+        const registerForm = document.getElementById('signup-form');
+        const spinnerContainer = document.getElementById('spinner-container');
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = registerForm.querySelector('input[name="username"]').value;
+            const email = registerForm.querySelector('input[name="email"]').value;
+            const password = registerForm.querySelector('input[name="password"]').value;
+            const location = registerForm.querySelector('input[name="location"]').value;
+
+            spinnerContainer.style.display = 'flex';
+
+            try {
+                const response = await fetch('/auth/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, email, password, location })
+                });
+        
+                if (!response.ok) {
+                throw new Error('Registration failed');
+                }
+                
+                localStorage.setItem('success', true);
+                localStorage.setItem('email', email);
+                window.location.href = `/login`;
+            } catch (error) {
+                toastr.error('Username/email already exists. Try using a different username/email.');
+            }
+            finally {
+                spinnerContainer.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

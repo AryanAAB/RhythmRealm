@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rhythm Realm</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "3000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+    </script>
+    <style>
+        .profile-table {
+            margin: 20px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .table th {
+            background-color: #f2f2f2;
+        }
+
+        .highlight {
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="header">
+            <div class="logo-container">
+                <a href="/profile" class="logo">
+                    <img src="images/logo.jpeg" alt="Rhythm Realm" class="logoImage">
+                </a>
+            </div>
+            <p class="music-name-profile">Rhythm Realm Jam Mates</p>
+            <div id="header-middle"></div>
+            <div class="header-right">
+                <div class="menu-toggle" id="menuToggle">
+                    <input type="checkbox" />
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <ul id="menu">
+                        <li><button id="profileButton" class="btn btn-success">Your Profile</button></li>
+                        <li><a href="/new-question">Add a Question</a></li>
+                        <li><button id="logoutButton" class="btn btn-danger">Logout</button></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="profile-table">
+            <h2>Jam Mates Profiles</h2>
+            <table id="profileTable" class="table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Contact Details</th>
+                        <th>Location</th>
+                        <th>Instruments</th>
+                        <th>Music Tastes</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="profileTableBody">
+                    
+                </tbody>
+            </table>
+        </div> 
+
+        <div class="footer">
+            <p>&copy; 2024 Rhythm Realm. All rights reserved.</p>
+        </div>
+    </div>
+    <script>
+        function haversineDistance(coords1, coords2) {
+            const toRadians = degrees => degrees * Math.PI / 180;
+
+            const { latitude: lat1, longitude: lon1 } = coords1;
+            const { latitude: lat2, longitude: lon2 } = coords2;
+
+            const R = 6371;
+            const dLat = toRadians(lat2 - lat1);
+            const dLon = toRadians(lon2 - lon1);
+
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                    Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
+                    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+            return R * c;
+        }
+
+        async function isNearbyLocation(userCoords, currentUserCoords, threshold) {
+            try {
+                const distance = haversineDistance(userCoords, currentUserCoords);
+
+                return distance <= threshold;
+            } catch (error) {
+                return false;
+            }
+        }
+
+        window.onload = async function() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch('/api/users', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch profile');
+                }
+
+                let data = await response.json();
+                const tableBody = document.getElementById('profileTableBody');
+                tableBody.innerHTML = '';
+
+                let usersWithDistanceAndCommonality = [];
+
+                for (let user of data.users) {
+                    if (user.username !== data.user.username) {
+                        const commonInstruments = user.preferences.instruments.filter(instrument =>
+                            data.currUserPreferences.instruments.includes(instrument)
+                        );
+                        const commonMusicTastes = user.preferences.musicTastes.filter(musicTaste =>
+                            data.currUserPreferences.musicTastes.includes(musicTaste)
+                        );
+
+                        const highlightedInstruments = user.preferences.instruments.map(instrument =>
+                            commonInstruments.includes(instrument) ? `<span class="highlight">${instrument}</span>` : instrument
+                        ).join(', ');
+
+                        const highlightedMusicTastes = user.preferences.musicTastes.map(musicTaste =>
+                            commonMusicTastes.includes(musicTaste) ? `<span class="highlight">${musicTaste}</span>` : musicTaste
+                        ).join(', ');
+
+                        const distance = haversineDistance(
+                            { longitude: user.location.longitude, latitude: user.location.latitude },
+                            { longitude: data.currUserLocation.longitude, latitude: data.currUserLocation.latitude }
+                        );
+
+                        const isNearby = distance <= 100;
+
+                        usersWithDistanceAndCommonality.push({
+                            user,
+                            distance,
+                            commonInstruments: highlightedInstruments,
+                            commonMusicTastes: highlightedMusicTastes,
+                            commonCount: commonInstruments.length + commonMusicTastes.length,
+                            isNearby,
+                            locationText: isNearby ? `<span class="highlight">${user.location.location}</span>` : user.location.location
+                        });
+                    }
+                }
+
+                usersWithDistanceAndCommonality.sort((a, b) => {
+                    if (a.distance === b.distance) {
+                        return b.commonCount - a.commonCount;
+                    }
+                    return a.distance - b.distance;
+                });
+
+                for (let entry of usersWithDistanceAndCommonality) {
+                    const { user, locationText, commonInstruments, commonMusicTastes } = entry;
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${user.username}</td>
+                        <td>${user.email}</td>
+                        <td>${locationText}</td>
+                        <td>${commonInstruments ? commonInstruments : "No instruments"}</td>
+                        <td>${commonMusicTastes ? commonMusicTastes : "No music tastes"}</td>
+                        <td><button class="btn btn-primary send-message-btn" data-recipient="${user.username}">Send Jam Message</button></td>
+                    `;
+                    tableBody.appendChild(row);
+
+                    const button = row.querySelector('.send-message-btn');
+                    button.addEventListener('click', async function() {
+                        const recipient = this.getAttribute('data-recipient');
+                        const message = 'Would you like to jam with me?';
+
+                        try {
+                            const sendMessageResponse = await fetch('/api/messages', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${token}`
+                                },
+                                body: JSON.stringify({
+                                    recipient,
+                                    message
+                                })
+                            });
+
+                            if (!sendMessageResponse.ok) {
+                                throw new Error('Failed to send message');
+                            }
+
+                            toastr.success('Jam message sent successfully!');
+                        } catch (error) {
+                            toastr.error('Failed to send jam message.');
+                        }
+                    });
+                }
+
+                if (data.users.length === 0) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td colspan="5">No users found.</td>`;
+                    tableBody.appendChild(row);
+                }
+            } catch (error) {
+                localStorage.setItem('failed', true);
+                window.location.href = '/';
+            }
+        }
+
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            var menu = document.getElementById('menu');
+            var checkbox = document.querySelector('.menu-toggle input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            if (checkbox.checked) {
+                menu.style.display = 'block';
+            } else {
+                menu.style.display = 'none';
+            }
+        });
+        document.addEventListener('click', function(event) {
+            var menu = document.getElementById('menu');
+            var menuToggle = document.getElementById('menuToggle');
+            var isClickInsideMenu = menu.contains(event.target);
+            var isClickOnToggle = menuToggle.contains(event.target);
+            if (!isClickInsideMenu && !isClickOnToggle) {
+                var checkbox = document.querySelector('.menu-toggle input[type="checkbox"]');
+                checkbox.checked = false;
+                menu.style.display = 'none';
+            }
+        });
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = '/';
+        });
+        document.getElementById('profileButton').addEventListener('click', () => {
+            window.location.href = '/profile';
+        });
+    </script>
+</body>
+</html>

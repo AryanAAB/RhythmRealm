@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rhythm Realm</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "3000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+        function toggleInstrumentsList(category) {
+            var instrumentsList = document.getElementById(category);
+            var div = document.getElementById("category " + category);
+            if (instrumentsList.style.display === "none" || instrumentsList.style.display === "") {
+                instrumentsList.style.display = "block";
+                div.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                instrumentsList.style.display = "none";
+            }
+        }
+        function toggleInstrumentsListAbove(category) {
+            var instrumentsList = document.getElementById(category);
+            var div = document.getElementById("category " + category);
+            instrumentsList.style.display = "block";
+            div.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    </script>
+    <style>
+        .category {
+            font-weight: bold;
+            margin-bottom: 15px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .instruments-list {
+            margin-bottom: 20px;
+        }
+
+        input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        input[type="checkbox"]:checked {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        input[type="checkbox"]:checked + label {
+            color: #007bff;
+        }
+
+        label {
+            font-size: 16px;
+            color: #555;
+            transition: color 0.3s ease;
+            display: inline-block;
+            margin-right: 10px;
+            text-align: left;
+            position: relative;
+        }
+
+        label:hover {
+            cursor: pointer;
+        }
+
+        .tooltip {
+            position: absolute;
+            left: calc(150px);
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            background-color: #feed00;
+            color: #0022ff;
+            font-size: 14px;
+            white-space: nowrap;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .items:hover .tooltip {
+            opacity: 1;
+        }
+
+        .items {
+            position: relative;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button[type="submit"] {
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .music-name-profile-category {
+            cursor: pointer;
+            color: #3e48ff;
+            font-size: 1rem;
+            margin-left: 20px;
+            padding: 8px 0;
+            transition: color 0.3s ease;
+        }
+
+        .music-name-profile-category:hover {
+            color: #0040ff;
+        }
+
+        .music-name-profile-category:hover::after {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: #555;
+            margin-top: 2px;
+        }
+        #header-middle {
+            display: flex;
+            align-items: center;
+        }
+
+        #header-middle p {
+            margin: 0 10px;
+        }
+
+        #update-location {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #update-location:hover {
+            background-color: #0056b3;
+        }
+
+        #update-location:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+        }
+
+        #update-location:active {
+            background-color: #004085;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="header">
+            <div class="logo-container">
+                <a href="/profile" class="logo">
+                    <img src="images/logo.jpeg" alt="Rhythm Realm" class="logoImage">
+                </a>
+            </div>
+            <p class="music-name-profile">Rhythm Realm Profile</p>
+            <div id="header-middle"></div>
+            <div class="header-right">
+                <div class="menu-toggle" id="menuToggle">
+                    <input type="checkbox" />
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <ul id="menu">
+                        <li><button id="jamButton" class="btn btn-success">View Jam Mates</button></li>
+                        <li><a href="/new-question">Add a Question</a></li>
+                        <li><button id="logoutButton" class="btn btn-danger">Logout</button></li>
+                    </ul>
+                </div>
+            </div>
+        </div> 
+        <div class="profile-info">
+            <div class="user-details">
+                <h2 id="welcome">Welcome</h2>
+                <p><strong>Username:</strong> <span id="username"></span></p>
+                <p><strong>Email:</strong> <span id="email"></span></p>
+                <p><strong>Location:</strong> <input type="text" id="location" name="location" size="50"></p>
+                <div class="button-container">
+                    <button id="update-location">Update Location</button>
+                </div>
+            </div>
+        </div>
+        <div id = "forms">   
+            <h2 style="text-align: center; color: brown;">Your Preferences</h2>         
+            <form method="post" id="user-preferences-form">
+            </form>
+            <h2 style="text-align: center; color: brown;">Your Listening Tastes</h2>
+            <form method="post" id="user-listening-form">
+            </form>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 Rhythm Realm. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        window.onload = async function() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch('/api/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch profile');
+                }
+
+                const data = await response.json();
+                document.getElementById('username').textContent = data.username;
+                document.getElementById('welcome').textContent = "Welcome " + data.username + "!";
+                document.getElementById('email').textContent = data.email;
+                document.getElementById('location').value = data.location;
+                const preferences = data.preferences || { instruments: [], musicTastes: [] };
+                renderPreferencesForm(preferences);
+            } catch (error) {
+                localStorage.setItem('failed', true);
+                window.location.href = '/';
+            }
+            document.getElementById('menuToggle').addEventListener('click', function() {
+                var menu = document.getElementById('menu');
+                var checkbox = document.querySelector('.menu-toggle input[type="checkbox"]');
+                checkbox.checked = !checkbox.checked;
+                if (checkbox.checked) {
+                    menu.style.display = 'block';
+                } else {
+                    menu.style.display = 'none';
+                }
+            });
+            document.addEventListener('click', function(event) {
+                var isClickInsideMenu = menu.contains(event.target);
+                var isClickOnToggle = menuToggle.contains(event.target);
+                if (!isClickInsideMenu && !isClickOnToggle) {
+                    menu.style.display = 'none';
+                    var checkbox = document.querySelector('.menu-toggle input[type="checkbox"]');
+                    checkbox.checked = false;
+                }
+            });
+            document.getElementById('update-location').addEventListener('click',  async (e) => {
+                e.preventDefault();
+
+                const location = document.getElementById('location').value;
+                try {   
+                    const token = localStorage.getItem('token');
+                    const response = await fetch('/api/profile/updateLocation', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ location })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to update location');
+                    }
+
+                    const data = await response.json();
+                    toastr.success("Location Updated Successfully!");
+                } catch (error) {
+                    console.log(error);
+                    toastr.error("Error in updating location. Please try again.");
+                }
+            });
+            
+            const userPreferencesForm = document.getElementById('submit-preferences');
+            userPreferencesForm.addEventListener('click', async (e) => {
+                e.preventDefault();
+
+                const instruments = Array.from(document.querySelectorAll('input[name="instruments"]:checked')).map(cb => cb.value);
+                const music = Array.from(document.querySelectorAll('input[name="musicType"]:checked')).map(cb => cb.value);
+                try {   
+                    const token = localStorage.getItem('token');
+                    const response = await fetch('/api/profile', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ instruments, music })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to update preferences');
+                    }
+
+                    const data = await response.json();
+                    toastr.success("Preferences Updated Successfully!");
+                } catch (error) {
+                    toastr.error("Error in updating preferences. Please try again.");
+                }
+            });
+        }
+
+        function renderPreferencesForm(preferences) {
+            const preferencesForm = document.getElementById('user-preferences-form');
+            const listeningForm = document.getElementById('user-listening-form');
+            const form = document.getElementById('forms');
+            const headerMiddle = document.getElementById('header-middle');
+
+            const categories = {
+                Strings: ["Violin", "Viola", "Cello", "Double Bass", "Guitar", "Harp", "Banjo", "Mandolin", "Ukulele"],
+                Woodwinds: ["Flute", "Clarinet", "Oboe", "Bassoon", "Saxophone", "Piccolo", "English Horn"],
+                Brass: ["Trumpet", "Trombone", "French Horn", "Tuba", "Cornet", "Euphonium"],
+                Percussion: ["Drums", "Xylophone", "Marimba", "Timpani", "Snare Drum", "Cymbals", "Tambourine", "Triangle"],
+                Keyboard: ["Piano", "Organ", "Harpsichord", "Accordion", "Synthesizer"],
+                Electronic: ["Electric Guitar", "Electric Bass", "Theremin", "Drum Machine"],
+                Plucked: ["Lute", "Sitar", "Balalaika", "Zither"],
+                "Ethnic/World Instruments": ["Djembe", "Tabla", "Didgeridoo", "Bagpipes", "Shamisen", "Erhu", "Kalimba"],
+                Vocal: ["Soprano", "Alto", "Tenor", "Bass"]
+            };
+
+            const instrumentSymbols = {
+                Strings: "🎻🎸🪕",
+                Woodwinds:"🎷",
+                Brass:"🎺📯",
+                Percussion:"🥁🎵",
+                Keyboard:"🎹🪗",
+                Electronic:"🎸🥁",
+                Plucked:"🎸",
+                "Ethnic/World Instruments":"🎻🎸",
+                Vocal:"🎤",
+            };
+
+            const instrumentDescriptions = {
+                Violin: "A string instrument played with a bow.",
+                Viola: "Slightly larger than a violin with a deeper sound.",
+                Cello: "A bass string instrument with a rich, deep tone.",
+                "Double Bass": "The largest and lowest-pitched bowed string instrument.",
+                Guitar: "A popular six-stringed instrument.",
+                Harp: "A large, multi-stringed instrument played by plucking.",
+                Banjo: "A four or five-stringed instrument with a unique twang.",
+                Mandolin: "A small, lute-like instrument with a bright sound.",
+                Ukulele: "A small, four-stringed instrument often associated with Hawaii.",
+                Flute: "A woodwind instrument without reeds.",
+                Clarinet: "A single-reed woodwind instrument.",
+                Oboe: "A double-reed woodwind instrument.",
+                Bassoon: "A large, double-reed woodwind instrument with a deep sound.",
+                Saxophone: "A single-reed woodwind instrument often used in jazz.",
+                Piccolo: "A small flute that plays an octave higher.",
+                "English Horn": "A double-reed woodwind instrument, similar to an oboe.",
+                Trumpet: "A brass instrument with a bright, powerful sound.",
+                Trombone: "A brass instrument with a slide.",
+                "French Horn": "A brass instrument with a coiled tube.",
+                Tuba: "The largest and lowest-pitched brass instrument.",
+                Cornet: "A brass instrument similar to a trumpet.",
+                Euphonium: "A brass instrument similar to a tuba but smaller.",
+                Drums: "A percussion instrument played by striking.",
+                Xylophone: "A percussion instrument with wooden bars.",
+                Marimba: "Similar to a xylophone but with a richer tone.",
+                Timpani: "Large, tunable drums played in orchestras.",
+                "Snare Drum": "A drum with metal wires on the bottom head.",
+                Cymbals: "Thin, round plates of metal played by striking.",
+                Tambourine: "A small percussion instrument with jingles.",
+                Triangle: "A small metal bar bent into a triangle shape.",
+                Piano: "A large keyboard instrument with hammers and strings.",
+                Organ: "A keyboard instrument with a rich, full sound.",
+                Harpsichord: "A keyboard instrument that plucks strings.",
+                Accordion: "A portable keyboard instrument with bellows.",
+                Synthesizer: "An electronic keyboard that generates various sounds.",
+                "Electric Guitar": "A guitar that uses electronic pickups.",
+                "Electric Bass": "A bass guitar that uses electronic pickups.",
+                Theremin: "An electronic instrument played without touching.",
+                "Drum Machine": "An electronic device that replicates drum sounds.",
+                Lute: "A plucked string instrument with a deep round back.",
+                Sitar: "A plucked string instrument from India.",
+                Balalaika: "A Russian stringed instrument with a triangular body.",
+                Zither: "A stringed instrument with a flat body.",
+                Djembe: "A rope-tuned skin-covered drum from West Africa.",
+                Tabla: "A pair of drums from India.",
+                Didgeridoo: "A wind instrument developed by Indigenous Australians.",
+                Bagpipes: "A wind instrument using enclosed reeds fed by a bag.",
+                Shamisen: "A three-stringed traditional Japanese instrument.",
+                Erhu: "A two-stringed bowed musical instrument from China.",
+                Kalimba: "A thumb piano from Africa.",
+                Soprano: "The highest female singing voice.",
+                Alto: "A lower female singing voice.",
+                Tenor: "The highest male singing voice.",
+                Bass: "The lowest male singing voice."
+            };
+
+            const musicTastes = {
+                Genres: ["Rock", "Pop", "Hip-Hop", "Jazz", "Classical", "Electronic", "Country", "R&B/Soul", "Blues", "Reggae", "Metal", "Punk", "Folk", "Indie", "Dance"],
+                Decades: ["1950s", "1960s", "1970s", "1980s", "1990s", "2000s", "2010s", "2020s"],
+                "Themes/Moods": ["Chill/Relaxing", "Party", "Workout", "Romantic", "Sad", "Happy", "Motivational", "Focus/Study", "Sleep"],
+                "Cultural/Regional Music": ["Latin", "K-Pop", "J-Pop", "Afrobeat", "Bollywood", "Celtic", "Middle Eastern", "Caribbean"],
+                "Instruments Focused": ["Piano Music", "Guitar Music", "Drum Music", "Violin Music", "Synth Music"],
+                "Specialty": ["Live Performances", "Acoustic", "Covers", "Remixes", "Soundtracks (Movies, TV Shows, Video Games)", "Experimental", "Lo-Fi", "Mashups"]
+            };
+
+            const musicListeningTastes = {
+                Rock: "Energetic with electric guitars and strong rhythms.",
+                Pop: "Catchy melodies and hooks, mainstream appeal.",
+                "Hip-Hop": "Rhythmic beats and rhymes, often addressing social issues.",
+                Jazz: "Improvisation and complex harmonies, ranging from swing to blues.",
+                Classical: "Timeless orchestral compositions, often intricate and expressive.",
+                Electronic: "Synth-driven beats and sounds, spanning many sub-genres.",
+                Country: "Storytelling with acoustic instruments and a Southern flair.",
+                "R&B/Soul": "Smooth vocals and groove-focused rhythms, often emotional.",
+                Blues: "Expressive melodies and lyrics, often highlighting life's struggles.",
+                Reggae: "Rhythmic and laid-back, originating from Jamaica.",
+                Metal: "Intense and heavy, characterized by powerful guitar riffs.",
+                Punk: "Fast-paced and rebellious, with a raw sound.",
+                Folk: "Acoustic and narrative, often highlighting cultural stories.",
+                Indie: "Independent and eclectic, often experimental and unique.",
+                Dance: "Upbeat and rhythmic, made for moving and grooving.",
+                "1950s": "Music from the 1950s, the birth of rock 'n' roll.",
+                "1960s": "Music from the 1960s, known for rock and cultural revolutions.",
+                "1970s": "Music from the 1970s, including disco, rock, and funk.",
+                "1980s": "Music from the 1980s, characterized by pop, new wave, and glam rock.",
+                "1990s": "Music from the 1990s, featuring grunge, hip-hop, and alternative.",
+                "2000s": "Music from the 2000s, diverse in genres with pop, rock, and hip-hop.",
+                "2010s": "Music from the 2010s, with the rise of EDM and indie music.",
+                "2020s": "Current music trends and evolving styles in the 2020s.",
+                "Chill/Relaxing": "Music to relax and unwind to.",
+                Party: "Upbeat music perfect for parties and celebrations.",
+                Workout: "Energetic music to keep you motivated during exercise.",
+                Romantic: "Music for romantic moments and occasions.",
+                Sad: "Emotional music for reflective and melancholic moods.",
+                Happy: "Upbeat and cheerful music to lift your spirits.",
+                Motivational: "Music that inspires and motivates.",
+                "Focus/Study": "Calming music to help you concentrate.",
+                Sleep: "Soothing music to aid in falling asleep.",
+                Latin: "Vibrant and rhythmic music from Latin America.",
+                "K-Pop": "Popular music from South Korea, known for its catchy melodies.",
+                "J-Pop": "Popular music from Japan, with a wide range of styles.",
+                Afrobeat: "Energetic music from Africa, blending traditional and modern sounds.",
+                Bollywood: "Film music from India, known for its colorful and dynamic style.",
+                Celtic: "Traditional music from Ireland and Scotland.",
+                "Middle Eastern": "Music from the Middle East, characterized by unique scales and rhythms.",
+                Caribbean: "Music from the Caribbean, including reggae, soca, and calypso.",
+                "Piano Music": "Music centered around piano compositions.",
+                "Guitar Music": "Music featuring prominent guitar parts.",
+                "Drum Music": "Rhythmic music focusing on drum patterns.",
+                "Violin Music": "Music showcasing the violin.",
+                "Synth Music": "Music created with synthesizers and electronic sounds.",
+                "Live Performances": "Recordings of live music performances.",
+                Acoustic: "Music performed with acoustic instruments.",
+                Covers: "Artists' renditions of songs originally performed by others.",
+                Remixes: "Reimagined versions of original songs.",
+                "Soundtracks (Movies, TV Shows, Video Games)": "Music from movies, TV shows, and video games.",
+                Experimental: "Innovative and unconventional music styles.",
+                "Lo-Fi": "Low-fidelity music with a relaxed, mellow vibe.",
+                Mashups: "Combining elements of different songs into one track."
+            };
+
+            for (let category in categories) {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'category';
+                categoryDiv.id = "category " + category;
+                categoryDiv.textContent = `${category} ${instrumentSymbols[category]}`;
+                categoryDiv.onclick = () => toggleInstrumentsList(category);
+
+                const instrumentsListDiv = document.createElement('div');
+                instrumentsListDiv.className = 'instruments-list';
+                instrumentsListDiv.id = category;
+
+                const headerCategory = document.createElement('p');
+                headerCategory.className = "music-name-profile-category";
+                headerCategory.textContent = category;
+                headerCategory.onclick = () => toggleInstrumentsListAbove(category);
+                headerMiddle.appendChild(headerCategory);
+                
+                categories[category].forEach(instrument => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = "items";
+
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.id = instrument;
+                    checkbox.name = 'instruments';
+                    checkbox.value = instrument;
+                    if (preferences[0].instruments.includes(instrument)) {
+                        checkbox.checked = true;
+                    }
+
+                    const label = document.createElement('label');
+                    label.for = instrument;
+                    label.textContent = instrument;
+                    label.setAttribute('data-tooltip', instrumentDescriptions[instrument]);
+                    label.onclick = () => {
+                        checkbox.checked = !checkbox.checked;
+                    };
+
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'tooltip';
+                    tooltip.textContent = instrumentDescriptions[instrument];
+
+                    itemDiv.appendChild(checkbox);
+                    itemDiv.appendChild(label);
+                    itemDiv.appendChild(tooltip);
+                    instrumentsListDiv.appendChild(itemDiv);
+                    instrumentsListDiv.appendChild(document.createElement('br'));
+                });
+
+                preferencesForm.appendChild(categoryDiv);
+                preferencesForm.appendChild(instrumentsListDiv);
+            }
+
+            for (let category in musicTastes) {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'category';
+                categoryDiv.id = "category " + category;
+                categoryDiv.textContent = category;
+                categoryDiv.onclick = () => toggleInstrumentsList(category);
+
+                const instrumentsListDiv = document.createElement('div');
+                instrumentsListDiv.className = 'instruments-list';
+                instrumentsListDiv.id = category;
+
+                musicTastes[category].forEach(instrument => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = "items";
+
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.id = instrument;
+                    checkbox.name = 'musicType';
+                    checkbox.value = instrument;
+                    if (preferences[0].musicTastes.includes(instrument)) {
+                        checkbox.checked = true;
+                    }
+
+                    const label = document.createElement('label');
+                    label.htmlFor = instrument;
+                    label.textContent = instrument;
+                    label.setAttribute('data-tooltip', musicListeningTastes[instrument]);
+
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'tooltip';
+                    tooltip.textContent = musicListeningTastes[instrument];
+
+                    itemDiv.appendChild(checkbox);
+                    itemDiv.appendChild(label);
+                    itemDiv.appendChild(tooltip);
+                    instrumentsListDiv.appendChild(itemDiv);
+                    instrumentsListDiv.appendChild(document.createElement('br'));
+                });
+
+                listeningForm.appendChild(categoryDiv);
+                listeningForm.appendChild(instrumentsListDiv);
+            }
+
+            const submitDiv = document.createElement('div');
+            submitDiv.className = "button-container";
+            const submitButton = document.createElement('button');
+            submitButton.type = 'submit';
+            submitButton.id = "submit-preferences";
+            submitButton.textContent = 'Update User Preferences';
+            
+            submitDiv.appendChild(submitButton);
+            form.appendChild(submitDiv);
+        }
+
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = '/';
+        });
+
+        document.getElementById('jamButton').addEventListener('click', () => {
+            window.location.href = '/users';
+        });
+    </script>
+</body>
+</html>
