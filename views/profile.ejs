@@ -221,6 +221,11 @@
                             </button>
                         </li>
                         <li>
+                            <button id="createEventButton" class="btn btn-primary">
+                                <i class="fas fa-calendar-plus"></i> Create Event
+                            </button>
+                        </li>
+                        <li>
                             <button id="logoutButton" class="btn btn-danger">
                                 <i class="fas fa-running"></i> Logout
                             </button>
@@ -324,7 +329,6 @@
                     const data = await response.json();
                     toastr.success("Location Updated Successfully!");
                 } catch (error) {
-                    console.log(error);
                     toastr.error("Error in updating location. Please try again.");
                 }
             });
@@ -634,6 +638,10 @@
 
         document.getElementById('messagesButton').addEventListener('click', () => {
             window.location.href = '/messages';
+        });
+
+        document.getElementById('createEventButton').addEventListener('click', () => {
+            window.location.href = '/createEvent';
         });
     </script>
 </body>

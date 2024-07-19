@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require("../models/User");
-const UserMessage = require("../models/UserMessage");
+const UserFriends = require("../models/UserFriends");
 
 router.post('/', async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
@@ -24,7 +24,7 @@ router.post('/', async (req, res) => {
             return res.status(404).send({ error: 'Recipient not found' });
         }
 
-        const newMessage = new UserMessage({
+        const newMessage = new UserFriends({
             sender,
             recipient: recipientUser,
             message
@@ -52,7 +52,7 @@ router.post('/respond/:id', async (req, res) => {
         const { id } = req.params;
         const { accepted } = req.body;
 
-        const message = await UserMessage.findById(id);
+        const message = await UserFriends.findById(id);
         
         message.accepted = accepted;
         await message.save();
@@ -74,7 +74,7 @@ router.get('/sent', async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        const sentMessages = await UserMessage.find({ sender: sender })
+        const sentMessages = await UserFriends.find({ sender: sender })
                                             .sort({ updatedAt: -1 })
                                             .populate('sender')
                                             .populate('recipient')
@@ -101,7 +101,7 @@ router.get('/received', async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        const receivedMessages = await UserMessage.find({ recipient: sender, accepted: null })
+        const receivedMessages = await UserFriends.find({ recipient: sender, accepted: null })
                                                 .sort({ updatedAt: -1 })
                                                 .populate('sender')
                                                 .populate('recipient')
@@ -128,7 +128,7 @@ router.get('/archived', async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        const archivedMessages = await UserMessage.find({ recipient: sender, accepted: { $ne: null } })
+        const archivedMessages = await UserFriends.find({ recipient: sender, accepted: { $ne: null } })
                                                 .sort({ updatedAt: -1 })
                                                 .populate('sender')
                                                 .populate('recipient')

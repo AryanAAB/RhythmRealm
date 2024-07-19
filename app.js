@@ -4,7 +4,8 @@ const path = require('path');
 const authRoutes = require('./routes/auth');
 const profileRoute = require('./routes/profile');
 const usersRoute = require('./routes/users');
-const messageRoute = require('./routes/messages');
+const friendsRoute = require('./routes/friends');
+const eventsRoute = require('./routes/event');
 
 const verifyToken = require('./middleware/auth');
 require('dotenv').config();
@@ -23,7 +24,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/auth', authRoutes);
 app.use('/api/profile', verifyToken, profileRoute);
 app.use('/api/users', verifyToken, usersRoute);
-app.use('/api/messages', verifyToken, messageRoute);
+app.use('/api/friends', verifyToken, friendsRoute);
+app.use('/api/events', verifyToken, eventsRoute);
 
 app.get('/', (req, res) => {
   res.render('landing');
@@ -47,7 +49,11 @@ app.get('/users', (req, res) => {
 
 app.get('/messages', (req, res) => {
   res.render('messages');
-})
+});
+
+app.get('/createEvent', (req, res) => {
+  res.render('createEvent');
+});
 
 mongoose.connect(MONGODB_URI, {})
   .then(() => {

@@ -88,6 +88,11 @@
                             </button>
                         </li>
                         <li>
+                            <button id="createEventButton" class="btn btn-primary">
+                                <i class="fas fa-calendar-plus"></i> Create Event
+                            </button>
+                        </li>
+                        <li>
                             <button id="logoutButton" class="btn btn-danger">
                                 <i class="fas fa-running"></i> Logout
                             </button>
@@ -109,7 +114,7 @@
                         <th>Location</th>
                         <th>Instruments</th>
                         <th>Music Tastes</th>
-                        <th>Actions</th>
+                        <th>Friend Request</th>
                     </tr>
                 </thead>
                 <tbody id="profileTableBody">
@@ -217,6 +222,7 @@
 
                 for (let entry of usersWithDistanceAndCommonality) {
                     const { user, locationText, commonInstruments, commonMusicTastes } = entry;
+                    const friendRequestStatus = getFriendRequestStatus(user._id, data.currUserFriends);
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${user.username}</td>
@@ -224,37 +230,44 @@
                         <td>${locationText}</td>
                         <td>${commonInstruments ? commonInstruments : "No instruments"}</td>
                         <td>${commonMusicTastes ? commonMusicTastes : "No music tastes"}</td>
-                        <td><button class="btn btn-primary send-message-btn" data-recipient="${user.username}">Send Jam Message</button></td>
+                        <td id="messageButton">${friendRequestStatus === 'Send Friend Request' ? 
+                            `<button class="btn btn-primary send-message-btn" data-recipient="${user.username}">Send Friend Request</button>` 
+                            : friendRequestStatus}</td>
                     `;
                     tableBody.appendChild(row);
 
                     const button = row.querySelector('.send-message-btn');
-                    button.addEventListener('click', async function() {
-                        const recipient = this.getAttribute('data-recipient');
-                        const message = 'Would you like to jam with me?';
 
-                        try {
-                            const sendMessageResponse = await fetch('/api/messages', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'Authorization': `Bearer ${token}`
-                                },
-                                body: JSON.stringify({
-                                    recipient,
-                                    message
-                                })
-                            });
+                    if(button){
+                        button.addEventListener('click', async function() {
+                            const recipient = this.getAttribute('data-recipient');
+                            const message = 'Would you like to be my friend?';
 
-                            if (!sendMessageResponse.ok) {
-                                throw new Error('Failed to send message');
+                            try {
+                                const sendMessageResponse = await fetch('/api/friends', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${token}`
+                                    },
+                                    body: JSON.stringify({
+                                        recipient,
+                                        message
+                                    })
+                                });
+
+                                if (!sendMessageResponse.ok) {
+                                    throw new Error('Failed to send message');
+                                }
+
+                                this.closest('td').innerHTML = 'Friend Request Sent/Received';
+
+                                toastr.success('Friend request sent successfully!');
+                            } catch (error) {
+                                toastr.error('Failed to send friend request.');
                             }
-
-                            toastr.success('Jam message sent successfully!');
-                        } catch (error) {
-                            toastr.error('Failed to send jam message.');
-                        }
-                    });
+                        });
+                    }
                 }
 
                 if (data.users.length === 0) {
@@ -269,6 +282,19 @@
                 window.location.href = '/';
             }
         }
+
+        const getFriendRequestStatus = (userId, currUserFriends) => {
+            const friend = currUserFriends.find(friend => 
+                (friend.sender._id.toString() === userId.toString() || friend.recipient._id.toString() === userId.toString())
+            );
+            
+            if (friend) {
+                if(friend.accepted !== null)
+                    return friend.accepted ? 'Accepted' : 'Declined';
+                return "Friend Request Sent/Received";
+            }
+            return 'Send Friend Request';
+        };
 
         document.getElementById('menuToggle').addEventListener('click', function() {
             var menu = document.getElementById('menu');
@@ -300,6 +326,9 @@
         });
         document.getElementById('messagesButton').addEventListener('click', () => {
             window.location.href = '/messages';
+        });
+        document.getElementById('createEventButton').addEventListener('click', () => {
+            window.location.href = '/createEvent';
         });
     </script>
 </body>

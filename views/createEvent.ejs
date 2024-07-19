@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rhythm Realm</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <style>
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        form input[type="text"],
+        form input[type="datetime-local"],
+        form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        form button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #218838;
+        }
+    </style>
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "3000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+    </script>
+</head>
+<body>
+    <div class="content">
+        <div class="header">
+            <div class="logo-container">
+                <a href="/profile" class="logo">
+                    <img src="images/logo.jpeg" alt="Rhythm Realm" class="logoImage">
+                </a>
+            </div>
+            <p class="music-name-profile">Rhythm Realm Create Event</p>
+            <div id="header-middle"></div>
+            <div class="header-right">
+                <div class="menu-toggle" id="menuToggle">
+                    <input type="checkbox" />
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <ul id="menu">
+                        <li>
+                            <button id="profileButton" class="btn btn-success">
+                                <i class="fas fa-user"></i> Your Profile
+                            </button>
+                        </li>
+                        <li>
+                            <button id="messagesButton" class="btn btn-warning">
+                                <i class="fas fa-bell"></i> Notifications
+                            </button>
+                        </li>
+                        <li>
+                            <button id="jamButton" class="btn btn-primary">
+                                <i class="fas fa-user-friends"></i> View Jam Mates
+                            </button>
+                        </li>
+                        <li>
+                            <button id="logoutButton" class="btn btn-danger">
+                                <i class="fas fa-running"></i> Logout
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="spinner-container" id="spinnerContainer">
+            <div class="spinner"></div>
+        </div>
+
+        <form id="eventForm">
+            <label for="name">Event Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" required>
+
+            <label for="typeOfPeopleRequired">Type of People Required (ex: Guitarist etc.):</label>
+            <input type="text" id="typeOfPeopleRequired" name="typeOfPeopleRequired" required>
+
+            <label for="dateTime">Date/Time:</label>
+            <input type="datetime-local" id="dateTime" name="dateTime" required>
+
+            <label for="additionalInfo">Additional Info:</label>
+            <textarea id="additionalInfo" name="additionalInfo"></textarea>
+
+            <button type="submit">Create Event</button>
+        </form>
+
+        <script>
+            document.getElementById('eventForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                document.getElementById('spinnerContainer').style.display = 'flex';
+
+                const name = document.getElementById('name').value;
+                const location = document.getElementById('location').value;
+                const typeOfPeopleRequired = document.getElementById('typeOfPeopleRequired').value;
+                const dateTime = document.getElementById('dateTime').value;
+                const additionalInfo = document.getElementById('additionalInfo').value;
+
+                try {   
+                    const token = localStorage.getItem('token');
+                    const response = await fetch('/api/events', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ name, location, typeOfPeopleRequired, dateTime, additionalInfo })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to create an event.');
+                    }
+
+                    const data = await response.json();
+
+                    document.getElementById('name').value = '';
+                    document.getElementById('location').value = '';
+                    document.getElementById('typeOfPeopleRequired').value = '';
+                    document.getElementById('dateTime').value = '';
+                    document.getElementById('additionalInfo').value = '';
+
+                    toastr.success("Event Created Successfully!");
+
+                    document.getElementById('spinnerContainer').style.display = 'none';
+                } catch (error) {
+                    toastr.error("Failed to create an event.");
+                    document.getElementById('spinnerContainer').style.display = 'none';
+                }
+            });
+
+            document.getElementById('menuToggle').addEventListener('click', function() {
+                var menu = document.getElementById('menu');
+                var checkbox = document.querySelector('.menu-toggle input[type="checkbox"]');
+                checkbox.checked = !checkbox.checked;
+                if (checkbox.checked) {
+                    menu.style.display = 'block';
+                } else {
+                    menu.style.display = 'none';
+                }
+            });
+            document.addEventListener('click', function(event) {
+                var isClickInsideMenu = menu.contains(event.target);
+                var isClickOnToggle = menuToggle.contains(event.target);
+                if (!isClickInsideMenu && !isClickOnToggle) {
+                    menu.style.display = 'none';
+                    var checkbox = document.querySelector('.menu-toggle input[type="checkbox"]');
+                    checkbox.checked = false;
+                }
+            });
+
+            document.getElementById('logoutButton').addEventListener('click', () => {
+                localStorage.clear();
+                window.location.href = '/';
+            });
+
+            document.getElementById('jamButton').addEventListener('click', () => {
+                window.location.href = '/users';
+            });
+
+            document.getElementById('messagesButton').addEventListener('click', () => {
+                window.location.href = '/messages';
+            });
+
+            document.getElementById('profileButton').addEventListener('click', () => {
+                window.location.href = '/profile';
+            });
+        </script>
+    </div>
+</body>
+</html>

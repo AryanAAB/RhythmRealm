@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const User = require("../models/User");
 const UserPreference = require("../models/UserPreference");
 const UserLocation = require("../models/UserLocation");
+const UserFriends = require("../models/UserFriends");
 
 router.get('/', async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
@@ -12,6 +13,13 @@ router.get('/', async (req, res) => {
         const user = await User.findById(decoded.userId).exec();
         const currUserPreferences = await UserPreference.findOne({ userId: user._id }).exec();
         const currUserLocation = await UserLocation.findOne({ userId: user._id }).exec();
+        const currUserFriends = await UserFriends.find({
+            $or: [
+              { sender: user._id },
+              { recipient: user._id }
+            ]
+        }).populate("sender").populate("recipient").exec();
+
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -62,7 +70,8 @@ router.get('/', async (req, res) => {
             users: users,
             user: user,
             currUserPreferences: currUserPreferences,
-            currUserLocation: currUserLocation
+            currUserLocation: currUserLocation,
+            currUserFriends: currUserFriends
         });
 
     } catch (error) {
