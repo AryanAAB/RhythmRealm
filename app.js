@@ -55,6 +55,10 @@ app.get('/createEvent', (req, res) => {
   res.render('createEvent');
 });
 
+app.get('/viewEvents', (req, res) => {
+  res.render('viewEvent');
+})
+
 mongoose.connect(MONGODB_URI, {})
   .then(() => {
     console.log('Connected to MongoDB');

@@ -108,6 +108,11 @@
                             </button>
                         </li>
                         <li>
+                            <button id="viewEventsButton" class="btn btn-info">
+                                <i class="fas fa-calendar"></i> View Events
+                            </button>
+                        </li>
+                        <li>
                             <button id="logoutButton" class="btn btn-danger">
                                 <i class="fas fa-running"></i> Logout
                             </button>
@@ -205,6 +210,7 @@
 
             document.getElementById('logoutButton').addEventListener('click', () => {
                 localStorage.clear();
+                localStorage.setItem('logout', true);
                 window.location.href = '/';
             });
 
@@ -214,6 +220,10 @@
 
             document.getElementById('messagesButton').addEventListener('click', () => {
                 window.location.href = '/messages';
+            });
+
+            document.getElementById('viewEventsButton').addEventListener('click', () => {
+                window.location.href = '/viewEvents';
             });
 
             document.getElementById('profileButton').addEventListener('click', () => {

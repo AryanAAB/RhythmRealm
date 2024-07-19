@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rhythm Realm</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "3000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+    </script>
+</head>
+<body>
+    <div class="content">
+        <div class="header">
+            <div class="logo-container">
+                <a href="/profile" class="logo">
+                    <img src="images/logo.jpeg" alt="Rhythm Realm" class="logoImage">
+                </a>
+            </div>
+            <p class="music-name-profile">Rhythm Realm Events</p>
+            <div id="header-middle"></div>
+            <div class="header-right">
+                <div class="menu-toggle" id="menuToggle">
+                    <input type="checkbox" />
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <ul id="menu">
+                        <li>
+                            <button id="profileButton" class="btn btn-success">
+                                <i class="fas fa-user"></i> Your Profile
+                            </button>
+                        </li>
+                        <li>
+                            <button id="messagesButton" class="btn btn-warning">
+                                <i class="fas fa-bell"></i> Notifications
+                            </button>
+                        </li>
+                        <li>
+                            <button id="jamButton" class="btn btn-primary">
+                                <i class="fas fa-user-friends"></i> View Jam Mates
+                            </button>
+                        </li>
+                        <li>
+                            <button id="createEventButton" class="btn btn-info">
+                                <i class="fas fa-calendar-plus"></i> Create Event
+                            </button>
+                        </li>
+                        <li>
+                            <button id="logoutButton" class="btn btn-danger">
+                                <i class="fas fa-running"></i> Logout
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="spinner-container" id="spinnerContainer">
+            <div class="spinner"></div>
+        </div>
+        <div class="eventsContainer">
+            <h2>All Events</h2>
+            <div id="allEvents"></div>
+
+            <h2>Past Events</h2>
+            <div id="pastEvents"></div>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 Rhythm Realm. All rights reserved.</p>
+        </div>
+    </div>
+    <script>
+        window.onload = async function() {
+            document.getElementById('spinnerContainer').style.display = 'flex';
+            
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch('/api/events', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch profile');
+                }
+
+                let data = await response.json();
+                const allEventsContainer = document.getElementById('allEvents');
+                const pastEventsContainer = document.getElementById('pastEvents');
+                allEventsContainer.innerHTML = '';
+                pastEventsContainer.innerHTML = '';
+
+                if (data.events.length > 0) {
+                    data.events.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
+                    
+                    data.events.forEach(event => {
+                        const eventCard = createEventCard(event, data.userId, true);
+                        allEventsContainer.appendChild(eventCard);
+                    });
+                } else {
+                    allEventsContainer.innerHTML = '<p>No upcoming events available.</p>';
+                }
+
+                if (data.archived.length > 0) {
+                    data.archived.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
+                    
+                    data.archived.forEach(event => {
+                        const eventCard = createEventCard(event, data.userId, false);
+                        pastEventsContainer.appendChild(eventCard);
+                    });
+                } else {
+                    pastEventsContainer.innerHTML = '<p>No past events available.</p>';
+                }
+
+                attachDeleteEventListeners();
+            } catch (error) {
+                localStorage.setItem('failed', true);
+                window.location.href = '/';
+            }
+                
+            document.getElementById('spinnerContainer').style.display = 'none';
+        };
+
+        function createEventCard(event, userId, addButtons) {
+            const eventCard = document.createElement('div');
+            eventCard.classList.add('event-card');
+
+            eventCard.innerHTML = `
+                <h3>${event.name}</h3>
+                <h2>By: ${event.createdBy.username}</h2>
+                <p><strong>Location:</strong> ${event.location}</p>
+                <p><strong>Date:</strong> ${new Date(event.dateTime).toLocaleString()}</p>
+                <p><strong>Speciality:</strong> ${event.typeOfPeopleRequired}</p>
+                <p><strong>Additional Information:</strong> ${event.additionalInfo ? event.additionalInfo : 'None'}</p>
+                <div class="event-rsvps">
+                    ${event.rsvps.length > 0 ? `
+                        <h4>RSVPs:</h4>
+                        <ul>
+                            ${event.rsvps.map(user => `<li>${user.username}</li>`).join('')}
+                        </ul>
+                    ` : '<p>RSVPs: No one has RSVP\'d yet.</p>'}
+                </div>
+                ${addButtons && event.createdBy._id === userId ? `
+                    <button class="btn btn-danger delete-event-btn" data-id="${event._id}">Delete</button>
+                ` : ''}
+                ${addButtons && !event.rsvps.some(user => user._id === userId) && event.createdBy._id !== userId ? `
+                    <button class="btn btn-primary rsvp-btn" data-id="${event._id}">RSVP</button>
+                ` : ''}
+            `;
+            return eventCard;
+        }
+
+        function attachDeleteEventListeners() {
+            const deleteButtons = document.querySelectorAll('.delete-event-btn');
+            
+            if(deleteButtons)
+                deleteButtons.forEach(button => {
+                    button.addEventListener('click', async function (event) {
+                        const eventId = event.target.getAttribute('data-id');
+
+                        try {
+                            const token = localStorage.getItem('token');
+                            const response = await fetch(`/api/events/${eventId}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'Authorization': `Bearer ${token}`
+                                }
+                            });
+
+                            if (!response.ok) {
+                                throw new Error('Failed to delete event');
+                            }
+
+                            event.target.closest('.event-card').remove();
+
+                            const allEventsContainer = document.getElementById('allEvents');
+                            if (allEventsContainer.children.length === 0) {
+                                allEventsContainer.innerHTML = '<p>No upcoming events available.</p>';
+                            }
+
+                            toastr.success("Event deleted successfully!");
+                        } catch (error) {
+                            console.error('Error:', error);
+                            toastr.error('Failed to delete event');
+                        }
+                    });
+                });
+
+            const rsvpButtons = document.querySelectorAll('.rsvp-btn');
+                
+            if(rsvpButtons)
+                rsvpButtons.forEach(button => {
+                    button.addEventListener('click', async function (event) {
+                        const eventId = event.target.getAttribute('data-id');
+
+                        try {
+                            const token = localStorage.getItem('token');
+                            const response = await fetch(`/api/events/${eventId}/rsvp`, {
+                                method: 'POST',
+                                headers: {
+                                    'Authorization': `Bearer ${token}`,
+                                    'Content-Type': 'application/json'
+                                }
+                            });
+
+                            if (!response.ok) {
+                                throw new Error('Failed to RSVP');
+                            }
+
+                            const eventCard = event.target.closest('.event-card');
+                            const rsvpsContainer = eventCard.querySelector('.event-rsvps ul');
+                            
+                            if (rsvpsContainer) {
+                                const newRsvp = await response.json();
+                                rsvpsContainer.innerHTML += `<li>${newRsvp.username}</li>`;
+                            } else {
+                                const newRsvpMessage = '<p>RSVPs: You have RSVP\'d to this event.</p>';
+                                eventCard.querySelector('.event-rsvps').innerHTML = newRsvpMessage;
+                            }
+
+                            event.target.disabled = true;
+                            event.target.textContent = 'RSVPed';
+                            toastr.success("Successfully RSVPed to the event!");
+                        } catch (error) {
+                            console.error('Error:', error);
+                            toastr.error('Failed to RSVP');
+                        }
+                    });
+                });
+        }
+
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            var menu = document.getElementById('menu');
+            var checkbox = document.querySelector('.menu-toggle input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            if (checkbox.checked) {
+                menu.style.display = 'block';
+            } else {
+                menu.style.display = 'none';
+            }
+        });
+        document.addEventListener('click', function(event) {
+            var isClickInsideMenu = menu.contains(event.target);
+            var isClickOnToggle = menuToggle.contains(event.target);
+            if (!isClickInsideMenu && !isClickOnToggle) {
+                menu.style.display = 'none';
+                var checkbox = document.querySelector('.menu-toggle input[type="checkbox"]');
+                checkbox.checked = false;
+            }
+        });
+
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            localStorage.clear();
+            localStorage.setItem('logout', true);
+            window.location.href = '/';
+        });
+        document.getElementById('profileButton').addEventListener('click', () => {
+            window.location.href = '/profile';
+        });
+        document.getElementById('jamButton').addEventListener('click', () => {
+            window.location.href = '/users';
+        });
+        document.getElementById('createEventButton').addEventListener('click', () => {
+            window.location.href = '/createEvent';
+        });
+        document.getElementById('messagesButton').addEventListener('click', () => {
+            window.location.href = '/messages';
+        });
+    </script>
+</body>

@@ -188,6 +188,11 @@
                 toastr.error("Failed to fetch profile data. Login again.");
                 localStorage.removeItem('failed');
             }
+            const logout = localStorage.getItem('logout');
+            if(logout){
+                toastr.success("Logout Successful!");
+                localStorage.removeItem('logout');
+            }
         });
     </script>
 </body>
