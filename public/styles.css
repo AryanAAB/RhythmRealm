@@ -145,7 +145,7 @@
     margin-bottom: 30px;
 }
 
-.specialties ul, .ambiance, .services ul, .testimonials {
+.specialties ul, .services ul, .testimonials {
     text-align: left;
     margin-bottom: 30px;
 }
@@ -246,6 +246,7 @@
     min-width: 100%;
     height: 100%;
     position: relative;
+    margin-top: -20px;
 }
   
 .slide img {
@@ -565,4 +566,32 @@
 
 .remove-track:hover {
     text-decoration: underline;
+}
+
+.cta .btn-primary, .cta .btn-secondary {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+    margin: 0 10px;
+    transition: background-color 0.3s ease;
+}
+
+.cta .btn-primary {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.cta .btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.cta .btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.cta .btn-secondary:hover {
+    background-color: #5a6268;
 }

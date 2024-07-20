@@ -66,6 +66,11 @@
                             </button>
                         </li>
                         <li>
+                            <button id="playListButton" class="btn btn-dark">
+                                <i class="fas fa-record-vinyl"></i> View Playlists
+                            </button>
+                        </li>
+                        <li>
                             <button id="createEventButton" class="btn btn-primary">
                                 <i class="fas fa-calendar-plus"></i> Create Event
                             </button>
@@ -224,12 +229,15 @@
         });
         document.getElementById('viewEventsButton').addEventListener('click', () => {
                 window.location.href = '/viewEvents';
-            });
+        });
         document.getElementById('createEventButton').addEventListener('click', () => {
             window.location.href = '/createEvent';
         });
         document.getElementById('createPlayListButton').addEventListener('click', () => {
             window.location.href = '/createPlaylist';
+        });
+        document.getElementById('playListButton').addEventListener('click', () => {
+            window.location.href = '/playlists';
         });
     </script>
 </body>

@@ -108,6 +108,11 @@
                             </button>
                         </li>
                         <li>
+                            <button id="playListButton" class="btn btn-dark">
+                                <i class="fas fa-record-vinyl"></i> View Playlists
+                            </button>
+                        </li>
+                        <li>
                             <button id="jamButton" class="btn btn-primary">
                                 <i class="fas fa-user-friends"></i> View Jam Mates
                             </button>
@@ -212,31 +217,28 @@
                     checkbox.checked = false;
                 }
             });
-
             document.getElementById('logoutButton').addEventListener('click', () => {
                 localStorage.clear();
                 localStorage.setItem('logout', true);
                 window.location.href = '/';
             });
-
             document.getElementById('jamButton').addEventListener('click', () => {
                 window.location.href = '/users';
-            });
-
+            })
             document.getElementById('messagesButton').addEventListener('click', () => {
                 window.location.href = '/messages';
             });
-
             document.getElementById('viewEventsButton').addEventListener('click', () => {
                 window.location.href = '/viewEvents';
             });
-
             document.getElementById('profileButton').addEventListener('click', () => {
                 window.location.href = '/profile';
             });
-
             document.getElementById('createPlayListButton').addEventListener('click', () => {
                 window.location.href = '/createPlaylist';
+            });
+            document.getElementById('playListButton').addEventListener('click', () => {
+                window.location.href = '/playlists';
             });
         </script>
     </div>
