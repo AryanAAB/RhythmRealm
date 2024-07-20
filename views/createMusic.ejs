@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rhythm Realm</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@magenta/music@^1.0.0"></script>
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "3000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+    </script>
+    <style>
+        .button {
+            padding: 10px 20px;
+            margin: 10px 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        
+        .button:hover {
+            transform: scale(1.02);
+        }
+        
+        .button:active {
+            transform: scale(1);
+        }
+        
+        .button[type="button"]:nth-child(2) {
+            background-color: #007bff;
+            color: #fff;
+        }
+        
+        .button[type="button"]:nth-child(2):hover {
+            background-color: #0069d9;
+        }
+        
+        .button[type="button"]:nth-child(3) {
+            background-color: #ffc107;
+            color: #fff;
+        }
+        
+        .button[type="button"]:nth-child(3):hover {
+            background-color: #e0a800;
+        }
+        
+        .button[type="button"]:nth-child(4) {
+            background-color: #dc3545;
+            color: #fff;
+        }
+        
+        .button[type="button"]:nth-child(4):hover {
+            background-color: #c82333;
+        }
+        
+        .description-box {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .warning-label {
+            color: red;
+            font-weight: bold;
+        }
+
+        .slider-container {
+            margin: 20px 0;
+        }
+
+        .slider-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .slider {
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 15px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .slider:hover {
+            opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #007bff;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #007bff;
+            cursor: pointer;
+        }
+
+        .custom-colored-btn {
+            background-color: #eb03d0;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .custom-colored-btn:hover {
+            background-color: #c600a8;
+            color: #fff;
+        }
+
+        .custom-colored-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(235, 3, 208, 0.5);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="header">
+            <div class="logo-container">
+                <a href="/profile" class="logo">
+                    <img src="images/logo.jpeg" alt="Rhythm Realm" class="logoImage">
+                </a>
+            </div>
+            <p class="music-name-profile">Rhythm Realm Generate Music</p>
+            <div id="header-middle"></div>
+            <div class="header-right">
+                <div class="menu-toggle" id="menuToggle">
+                    <input type="checkbox" />
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <ul id="menu">
+                        <li>
+                            <button id="profileButton" class="btn btn-success">
+                                <i class="fas fa-user"></i> Your Profile
+                            </button>
+                        </li>
+                        <li>
+                            <button id="messagesButton" class="btn btn-warning">
+                                <i class="fas fa-bell"></i> Notifications
+                            </button>
+                        </li>
+                        <li>
+                            <button id="jamButton" class="btn custom-colored-btn">
+                                <i class="fas fa-user-friends"></i> View Jam Mates
+                            </button>
+                        </li>
+                        <li>
+                            <button id="createPlayListButton" class="btn btn-secondary">
+                                <i class="fas fa-music"></i> Create Playlist
+                            </button>
+                        </li>
+                        <li>
+                            <button id="playListButton" class="btn btn-dark">
+                                <i class="fas fa-record-vinyl"></i> View Playlists
+                            </button>
+                        </li>
+                        <li>
+                            <button id="createEventButton" class="btn btn-primary">
+                                <i class="fas fa-calendar-plus"></i> Create Event
+                            </button>
+                        </li>
+                        <li>
+                            <button id="viewEventsButton" class="btn btn-info">
+                                <i class="fas fa-calendar"></i> View Events
+                            </button>
+                        </li>
+                        <li>
+                            <button id="logoutButton" class="btn btn-danger">
+                                <i class="fas fa-running"></i> Logout
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="spinner-container" id="spinnerContainer">
+            <div class="spinner"></div>
+        </div>
+        
+        <div class="description-box">
+            <h4>Description</h4>
+            <p>Use this form to add musical notes to your composition. Make sure the pitch values are between 0 and 127. After adding your notes, you can play the sequence or let the AI generate an extension. Please note that if the pitch jumps too quickly between notes, the AI model might not work correctly and could give an error.</p>
+            <p class="warning-label">Warning: If the pitches jump too quickly, the AI model might not work and give an error.</p>
+        </div>
+
+        <form id="noteForm">
+            <h3>Add Note</h3>
+            <label for="pitch">Pitch (0-127):</label>
+            <input type="number" id="pitch" name="pitch" min="0" max="127" required>
+            
+            <label for="startTime">Start Time:</label>
+            <input type="number" id="startTime" name="startTime" step="0.5" value="0.0" readonly>
+            
+            <label for="endTime">End Time:</label>
+            <input type="number" id="endTime" name="endTime" step="0.5" value="0.5" readonly>
+            
+            <button type="button" onclick="addNote()" class="button">Add Note</button>
+        </form>
+
+        <div class="slider-container">
+            <label for="nextStepSlider">Next Steps (10-200):</label>
+            <input type="range" id="nextStepSlider" name="nextStepSlider" min="10" max="200" value="140" class="slider">
+        </div>
+
+        <div class="slider-container">
+            <label for="temperatureSlider">Temperature (0.1-2.0):</label>
+            <input type="range" id="temperatureSlider" name="temperatureSlider" min="0.1" max="2.0" value="1.0" step="0.1" class="slider">
+        </div>
+
+        <h3>Current Notes:</h3>
+        <ul id="noteList"></ul>
+
+        <button type="button" onclick="play()" class="button">Play Song</button>
+        <button type="button" onclick="generateSequence()" class="button">Generate New Music</button>
+        <button type="button" onclick="clearNotes()" class="button">Clear Notes</button>
+        <button type="button" onclick="saveMusic()" class="button">Save Your Music</button>
+        <button type="button" onclick="saveGeneratedMusic()" class="button">Save Generated Music</button>
+   
+    <script>
+        window.onload = async function() {
+            document.getElementById('spinnerContainer').style.display = 'flex';
+
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch('/api/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch profile');
+                }
+                document.getElementById('spinnerContainer').style.display = 'none';
+            } catch (error) {
+                localStorage.setItem('failed', true);
+                document.getElementById('spinnerContainer').style.display = 'none';
+                window.location.href = '/';
+            }
+        };
+        let userNotes = [];
+        let generatedMusic = null;
+        let rnnPlayer = new mm.Player();
+        let currentStartTime = 0.0;
+        let currentEndTime = 0.5;
+
+        function addNote() {
+            try {
+                const pitch = parseInt(document.getElementById('pitch').value);
+
+                // Validation
+                if (!pitch || pitch < 0 || pitch > 127) {
+                    toastr.error("Pitch must be between 0 and 127.");
+                    return;
+                }
+
+                // Add note to the list
+                const note = {
+                    pitch: pitch,
+                    startTime: currentStartTime,
+                    endTime: currentEndTime
+                };
+                userNotes.push(note);
+                displayNotes();
+
+                // Increment start time and end time
+                currentStartTime += 0.5;
+                currentEndTime += 0.5;
+
+                document.getElementById('startTime').value = currentStartTime;
+                document.getElementById('endTime').value = currentEndTime;
+
+                toastr.success("Note added successfully.");
+            } catch (error) {
+                console.error("Error adding note:", error);
+                toastr.error("An error occurred while adding the note.");
+            }
+        }
+
+        function displayNotes() {
+            const noteList = document.getElementById('noteList');
+            noteList.innerHTML = '';
+
+            userNotes.forEach((note, index) => {
+                const noteItem = document.createElement('li');
+                noteItem.innerHTML = `
+                Pitch:<input type="number" value="${note.pitch}" onchange="editNotePitch(${index}, this.value)" min="0" max="127">, Start Time: ${note.startTime}, End Time: ${note.endTime};`
+                noteList.appendChild(noteItem);
+            });
+        }
+
+        function editNotePitch(index, newPitch) {
+            newPitch = parseInt(newPitch);
+
+            // Validate new pitch value
+            if (!newPitch || newPitch < 0 || newPitch > 127) {
+                toastr.error("Pitch must be between 0 and 127.");
+                displayNotes(); // Re-render notes to reset invalid value
+                return;
+            }
+
+            userNotes[index].pitch = newPitch;
+            toastr.success("Pitch updated successfully.");
+        }
+
+        async function play() {
+            try {
+                const noteSequence = {
+                    ticksPerQuarter: 220,
+                    totalTime: currentEndTime,
+                    timeSignatures: [
+                        {
+                            time: 0,
+                            numerator: 4,
+                            denominator: 4,
+                        },
+                    ],
+                    tempos: [
+                        {
+                            time: 0,
+                            qpm: 120,
+                        },
+                    ],
+                    notes: userNotes,
+                };
+
+                await rnnPlayer.start(noteSequence);
+                toastr.success("Played the sequence.");
+            } catch (error) {
+                toastr.error("An error occurred while playing the sequence.");
+            }
+        }
+
+        async function generateSequence() {
+            try{
+                const steps = parseInt(document.getElementById("nextStepSlider").value);
+                const temp = parseFloat(document.getElementById("temperatureSlider").value);
+                music_rnn = new mm.MusicRNN('https://storage.googleapis.com/magentadata/js/checkpoints/music_rnn/basic_rnn');
+                await music_rnn.initialize();
+
+                // Convert userNotes to NoteSequence format
+                const noteSequence = {
+                    notes: userNotes,
+                    totalTime: Math.max(...userNotes.map(note => note.endTime))
+                };
+
+                // Quantize the sequence and generate a new sequence
+                const qns = mm.sequences.quantizeNoteSequence(noteSequence, 4);
+                const rnn_steps = steps;
+                const rnn_temperature = temp;
+
+                generatedMusic = await music_rnn.continueSequence(qns, rnn_steps, rnn_temperature);
+                await rnnPlayer.start(generatedMusic);
+                toastr.success("Played the next sequence.");
+            } catch(error) {
+                toastr.error("Could not generate a new sequence from the given sequence.");
+            }
+        }
+
+        function clearNotes() {
+            userNotes = [];
+            generatedMusic = null;
+            displayNotes();
+            currentStartTime = 0.0;
+            currentEndTime = 0.5;
+            document.getElementById('startTime').value = currentStartTime;
+            document.getElementById('endTime').value = currentEndTime;
+            toastr.success("All notes cleared.");
+        }
+
+        async function saveMusic() {
+            try {
+                // Check if there's music to save
+                if (userNotes.length === 0) {
+                    toastr.error('No music data available to save.');
+                    return;
+                }
+
+                // Create NoteSequence from userNotes
+                const noteSequence = {
+                    totalTime: currentEndTime,
+                    notes: userNotes,
+                };
+
+                noteSequence.notes.forEach(n => n.velocity = 100);
+                
+                // Quantize the sequence
+                const qns = mm.sequences.quantizeNoteSequence(noteSequence, 4);
+
+                // Convert NoteSequence to MIDI
+                const midiData = await mm.sequenceProtoToMidi(qns);
+
+                // Create a Blob and trigger download
+                const blob = new Blob([midiData], { type: 'audio/midi' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'music.mid';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                toastr.success('Music saved successfully.');
+            } catch (error) {
+                console.error('Error saving music:', error);
+                toastr.error('An error occurred while saving the music.');
+            }
+        }
+
+        async function saveGeneratedMusic() {
+            if (!generatedMusic) {
+                toastr.error('No generated music to save.');
+                return;
+            }
+
+            try {
+                generatedMusic.notes.forEach(n => n.velocity = 100);
+                const midiData = await mm.sequenceProtoToMidi(generatedMusic);
+                const blob = new Blob([midiData], { type: 'audio/midi' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'generatedMusic.mid';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                toastr.success('Generated music saved successfully.');
+            } catch (error) {
+                toastr.error('An error occurred while saving the generated music.');
+                console.error('Error saving generated music:', error);
+            }
+        }
+
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            var menu = document.getElementById('menu');
+            var checkbox = document.querySelector('.menu-toggle input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            if (checkbox.checked) {
+                menu.style.display = 'block';
+            } else {
+                menu.style.display = 'none';
+            }
+        });
+        document.addEventListener('click', function(event) {
+            var isClickInsideMenu = menu.contains(event.target);
+            var isClickOnToggle = menuToggle.contains(event.target);
+            if (!isClickInsideMenu && !isClickOnToggle) {
+                menu.style.display = 'none';
+                var checkbox = document.querySelector('.menu-toggle input[type="checkbox"]');
+                checkbox.checked = false;
+            }
+        });
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            localStorage.clear();
+            localStorage.setItem('logout', true);
+            window.location.href = '/';
+        });
+        document.getElementById('profileButton').addEventListener('click', () => {
+            window.location.href = '/profile';
+        });
+        document.getElementById('jamButton').addEventListener('click', () => {
+            window.location.href = '/users';
+        });
+        document.getElementById('viewEventsButton').addEventListener('click', () => {
+                window.location.href = '/viewEvents';
+        });
+        document.getElementById('createEventButton').addEventListener('click', () => {
+            window.location.href = '/createEvent';
+        });
+        document.getElementById('createPlayListButton').addEventListener('click', () => {
+            window.location.href = '/createPlaylist';
+        });
+        document.getElementById('playListButton').addEventListener('click', () => {
+            window.location.href = '/playlists';
+        });
+        document.getElementById('messagesButton').addEventListener('click', () => {
+            window.location.href = '/messages';
+        });
+    </script>
+</body>
+</html>

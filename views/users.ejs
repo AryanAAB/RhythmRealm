@@ -58,6 +58,28 @@
         .highlight {
             color: blue;
         }
+
+        .custom-colored-btn {
+            background-color: #eb03d0;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .custom-colored-btn:hover {
+            background-color: #c600a8;
+            color: #fff;
+        }
+
+        .custom-colored-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(235, 3, 208, 0.5);
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -85,6 +107,11 @@
                         <li>
                             <button id="messagesButton" class="btn btn-warning">
                                 <i class="fas fa-bell"></i> Notifications
+                            </button>
+                        </li>
+                        <li>
+                            <button id="createMusicButton" class="btn custom-colored-btn">
+                                <i class="fas fa-headphones"></i> Create Your Music
                             </button>
                         </li>
                         <li>
@@ -354,6 +381,9 @@
         });
         document.getElementById('playListButton').addEventListener('click', () => {
             window.location.href = '/playlists';
+        });
+        document.getElementById('createMusicButton').addEventListener('click', () => {
+            window.location.href = '/createMusic';
         });
     </script>
 </body>

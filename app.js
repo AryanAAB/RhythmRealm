@@ -67,7 +67,11 @@ app.get('/createPlaylist', (req, res) => {
 
 app.get('/playlists', (req, res) => {
   res.render('playlists');
-})
+});
+
+app.get('/createMusic', (req, res) => {
+  res.render('createMusic');
+});
 
 mongoose.connect(MONGODB_URI, {})
   .then(() => {

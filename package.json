@@ -16,8 +16,10 @@
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "jsonwebtoken": "^9.0.2",
+    "magenta": "^0.0.0",
     "mongodb": "^6.8.0",
     "mongoose": "^8.5.0",
+    "multer": "^1.4.5-lts.1",
     "node-fetch": "^2.7.0"
   }
 }

@@ -32,6 +32,29 @@
             "hideMethod": "fadeOut"
         };
     </script>
+    <style>
+        .custom-colored-btn {
+            background-color: #eb03d0;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .custom-colored-btn:hover {
+            background-color: #c600a8;
+            color: #fff;
+        }
+
+        .custom-colored-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(235, 3, 208, 0.5);
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
     <div class="content">
@@ -58,6 +81,11 @@
                         <li>
                             <button id="messagesButton" class="btn btn-warning">
                                 <i class="fas fa-bell"></i> Notifications
+                            </button>
+                        </li>
+                        <li>
+                            <button id="createMusicButton" class="btn custom-colored-btn">
+                                <i class="fas fa-headphones"></i> Create Your Music
                             </button>
                         </li>
                         <li>
@@ -107,6 +135,28 @@
         </div>
     </div>
     <script>
+        window.onload = async function() {
+            document.getElementById('spinnerContainer').style.display = 'flex';
+
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch('/api/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch profile');
+                }
+                document.getElementById('spinnerContainer').style.display = 'none';
+            } catch (error) {
+                localStorage.setItem('failed', true);
+                document.getElementById('spinnerContainer').style.display = 'none';
+                window.location.href = '/';
+            }
+        };
+        
         let trackCount = 0;
 
         function addTrack() {
@@ -204,34 +254,31 @@
                 checkbox.checked = false;
             }
         });
-
         document.getElementById('logoutButton').addEventListener('click', () => {
             localStorage.clear();
             localStorage.setItem('logout', true);
             window.location.href = '/';
         });
-
         document.getElementById('jamButton').addEventListener('click', () => {
             window.location.href = '/users';
         });
-
         document.getElementById('messagesButton').addEventListener('click', () => {
             window.location.href = '/messages';
         });
-
         document.getElementById('viewEventsButton').addEventListener('click', () => {
             window.location.href = '/viewEvents';
         });
-
         document.getElementById('profileButton').addEventListener('click', () => {
             window.location.href = '/profile';
         });
-
         document.getElementById('createEventButton').addEventListener('click', () => {
             window.location.href = '/createEvent';
         });
         document.getElementById('playListButton').addEventListener('click', () => {
             window.location.href = '/playlists';
+        });
+        document.getElementById('createMusicButton').addEventListener('click', () => {
+            window.location.href = '/createMusic';
         });
     </script>
 </body>
