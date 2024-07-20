@@ -41,7 +41,7 @@
                     <img src="images/logo.jpeg" alt="Rhythm Realm" class="logoImage">
                 </a>
             </div>
-            <p class="music-name-profile">Rhythm Realm Notifications</p>
+            <p class="music-name-profile">Rhythm Realm Create Playlists</p>
             <div id="header-middle"></div>
             <div class="header-right">
                 <div class="menu-toggle" id="menuToggle">
@@ -56,13 +56,13 @@
                             </button>
                         </li>
                         <li>
-                            <button id="jamButton" class="btn btn-warning">
-                                <i class="fas fa-user-friends"></i> View Jam Mates
+                            <button id="messagesButton" class="btn btn-warning">
+                                <i class="fas fa-bell"></i> Notifications
                             </button>
                         </li>
                         <li>
-                            <button id="createPlayListButton" class="btn btn-secondary">
-                                <i class="fas fa-music"></i> Create Playlist
+                            <button id="jamButton" class="btn btn-secondary">
+                                <i class="fas fa-user-friends"></i> View Jam Mates
                             </button>
                         </li>
                         <li>
@@ -87,109 +87,98 @@
         <div class="spinner-container" id="spinnerContainer">
             <div class="spinner"></div>
         </div>
-        <div class="messagesContainer">
-            <h2>Sent Friend Requests</h2>
-            <div id="sentMessages"></div>
 
-            <h2>Received Friend Requests</h2>
-            <div id="receivedMessages"></div>
+        <form id="playlistForm">
+            <input type="text" id="name" placeholder="Playlist Name" required>
+            <textarea id="description" placeholder="Description" required></textarea>
+            <div id="trackContainer">
+            </div>
+            <button type="button" onclick="addTrack()">+ Add Track</button>
+            <button type="submit">Create Playlist</button>
+        </form>
 
-            <h2>Archived Friend Requests</h2>
-            <div id="archivedMessages"></div>
-        </div>
         <div class="footer">
             <p>&copy; 2024 Rhythm Realm. All rights reserved.</p>
         </div>
     </div>
     <script>
-        window.onload = async function() {
-            document.getElementById('spinnerContainer').style.display = 'flex';
-            
-            fetchMessages("api/friends/sent", 'sentMessages', true);
-            fetchMessages("api/friends/received", 'receivedMessages', false);
-            fetchMessages("api/friends/archived", 'archivedMessages', true);
-                
-            document.getElementById('spinnerContainer').style.display = 'none';
-        };
+        let trackCount = 0;
 
-        async function fetchMessages(url, elementId, noButton) {
-            let messages = null;
+        function addTrack() {
+            const trackContainer = document.getElementById('trackContainer');
+            const trackDiv = document.createElement('div');
+            trackDiv.classList.add('track-div');
+            trackDiv.id = `track-${trackCount}`;
+            trackDiv.innerHTML = `
+                <input type="text" name="title-${trackCount}" placeholder="Track Title" required>
+                <input type="text" name="artist-${trackCount}" placeholder="Artist">
+                <input type="text" name="album-${trackCount}" placeholder="Album">
+                <input type="text" name="url-${trackCount}" placeholder="Track URL">
+                <span class="remove-track" onclick="removeTrack(${trackCount})">Remove</span>
+            `;
+            trackContainer.appendChild(trackDiv);
+            trackCount++;
+        }
 
-            try {
-                const token = localStorage.getItem('token');
-                const response = await fetch(url, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+        function removeTrack(trackId) {
+            const trackDiv = document.getElementById(`track-${trackId}`);
+            trackDiv.remove();
+        }
 
-                if (!response.ok) {
-                    throw new Error('Failed to fetch profile');
-                }
+        document.getElementById('playlistForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-                let data = await response.json();
-                messages = data.message;
-            } catch (error) {
-                localStorage.setItem('failed', true);
-                window.location.href = '/';
-            }  
-            
-            const container = document.getElementById(elementId);
-            container.innerHTML = '';
+            const token = localStorage.getItem('token');
 
-            if (messages.length === 0) {
-                container.innerHTML = '<p>No messages found.</p>';
-            } else {
-                messages.forEach(message => {
-                    const messageElement = document.createElement('div');
-                    messageElement.className = 'message';
-                    messageElement.innerHTML = `
-                        <p><strong>From:</strong> ${message.sender.username}</p>
-                        <p><strong>To:</strong> ${message.recipient.username}</p>
-                        <p><strong>Message:</strong> ${message.message}</p>
-                        ${noButton && message.accepted === null? 
-                        `<p><strong>Response:</strong> Not Yet Accepted or Declined</p>` : 
-                        noButton ? 
-                        `<p><strong>Response:</strong> ${message.accepted ? 'Accepted' : 'Declined'}</p>` : 
-                        message.accepted === null ? `
-                            <button onclick="respondToMessage('${message._id}', true)" class="btn btn-success">Accept</button>
-                            <button onclick="respondToMessage('${message._id}', false)" class="btn btn-danger">Decline</button>
-                        ` : `
-                            <p><strong>Response:</strong> ${message.accepted ? 'Accepted' : 'Declined'}</p>
-                        `}
-                    `;
-                    container.appendChild(messageElement);
-                });
+            const name = document.getElementById('name').value;
+            const description = document.getElementById('description').value;
+            const trackElements = document.querySelectorAll('#trackContainer .track-div');
+
+            if(trackElements.length === 0){
+                toastr.error("Please add at least 1 track to the playlist.");
+                return;
             }
-        };
 
-        async function respondToMessage(messageId, accepted) {
-            document.getElementById('spinnerContainer').style.display = 'flex';
-            
-            try {
-                const token = localStorage.getItem('token');
-                const response = await fetch(`/api/friends/respond/${messageId}`, {
+            const trackIds = [];
+
+            for (const trackElement of trackElements) {
+                const title = trackElement.querySelector(`input[name^="title-"]`).value;
+                const artist = trackElement.querySelector(`input[name^="artist-"]`).value;
+                const album = trackElement.querySelector(`input[name^="album-"]`).value;
+                const url = trackElement.querySelector(`input[name^="url-"]`).value;
+
+                const trackResponse = await fetch('/api/playlists/tracks', {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({ accepted })
+                    body: JSON.stringify({ title, artist, album, url }),
                 });
 
-                if (response.ok) {
-                    toastr.success('Response recorded successfully.');
-                    fetchMessages("api/friends/received", 'receivedMessages', false);
-                    fetchMessages("api/friends/archived", 'archivedMessages', true);
-                } else {
-                    throw new Error('Failed to respond to message.');
-                }
-            } catch (error) {
-                toastr.error('Failed to respond to message. Try again later.');
+                const track = await trackResponse.json();
+                trackIds.push(track._id);
             }
 
-            document.getElementById('spinnerContainer').style.display = 'none';
-        }
+            const response = await fetch('/api/playlists/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ name, description, trackIds }),
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                toastr.success("Playlist Created successfully.");
+                document.getElementById('playlistForm').reset();
+                document.getElementById('trackContainer').innerHTML = '';
+                trackCount = 0;
+            } else {
+                toastr.error("Error in creating the playlist. Make sure that you have at least 1 track.");
+            }
+        });
 
         document.getElementById('menuToggle').addEventListener('click', function() {
             var menu = document.getElementById('menu');
@@ -216,20 +205,26 @@
             localStorage.setItem('logout', true);
             window.location.href = '/';
         });
-        document.getElementById('profileButton').addEventListener('click', () => {
-            window.location.href = '/profile';
-        });
+
         document.getElementById('jamButton').addEventListener('click', () => {
             window.location.href = '/users';
         });
+
+        document.getElementById('messagesButton').addEventListener('click', () => {
+            window.location.href = '/messages';
+        });
+
         document.getElementById('viewEventsButton').addEventListener('click', () => {
-                window.location.href = '/viewEvents';
-            });
+            window.location.href = '/viewEvents';
+        });
+
+        document.getElementById('profileButton').addEventListener('click', () => {
+            window.location.href = '/profile';
+        });
+
         document.getElementById('createEventButton').addEventListener('click', () => {
             window.location.href = '/createEvent';
         });
-        document.getElementById('createPlayListButton').addEventListener('click', () => {
-            window.location.href = '/createPlaylist';
-        });
     </script>
 </body>
+</html>

@@ -6,6 +6,7 @@ const profileRoute = require('./routes/profile');
 const usersRoute = require('./routes/users');
 const friendsRoute = require('./routes/friends');
 const eventsRoute = require('./routes/event');
+const playlistRoute = require('./routes/playlist');
 
 const verifyToken = require('./middleware/auth');
 require('dotenv').config();
@@ -26,6 +27,7 @@ app.use('/api/profile', verifyToken, profileRoute);
 app.use('/api/users', verifyToken, usersRoute);
 app.use('/api/friends', verifyToken, friendsRoute);
 app.use('/api/events', verifyToken, eventsRoute);
+app.use('/api/playlists', verifyToken, playlistRoute);
 
 app.get('/', (req, res) => {
   res.render('landing');
@@ -57,7 +59,11 @@ app.get('/createEvent', (req, res) => {
 
 app.get('/viewEvents', (req, res) => {
   res.render('viewEvent');
-})
+});
+
+app.get('/createPlaylist', (req, res) => {
+  res.render('createPlaylist');
+});
 
 mongoose.connect(MONGODB_URI, {})
   .then(() => {

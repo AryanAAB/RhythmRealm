@@ -103,6 +103,11 @@
                             </button>
                         </li>
                         <li>
+                            <button id="createPlayListButton" class="btn btn-secondary">
+                                <i class="fas fa-music"></i> Create Playlist
+                            </button>
+                        </li>
+                        <li>
                             <button id="jamButton" class="btn btn-primary">
                                 <i class="fas fa-user-friends"></i> View Jam Mates
                             </button>
@@ -228,6 +233,10 @@
 
             document.getElementById('profileButton').addEventListener('click', () => {
                 window.location.href = '/profile';
+            });
+
+            document.getElementById('createPlayListButton').addEventListener('click', () => {
+                window.location.href = '/createPlaylist';
             });
         </script>
     </div>
