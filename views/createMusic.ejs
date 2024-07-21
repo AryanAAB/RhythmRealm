@@ -402,6 +402,7 @@
                 toastr.success("Played the next sequence.");
             } catch(error) {
                 toastr.error("Could not generate a new sequence from the given sequence.");
+                toastr.error(error);
             }
         }
 

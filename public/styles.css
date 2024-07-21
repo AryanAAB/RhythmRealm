@@ -157,7 +157,7 @@
     margin-bottom: 10px;
 }
 
-.specialties ul li::before, .ambiance p::before, .services ul li::before {
+.specialties ul li::before, .services ul li::before {
     content: "\f005";
     font-family: "Font Awesome 5 Free";
     font-weight: 900;
