@@ -6,6 +6,14 @@ const UserPreference = require("../models/UserPreference");
 const UserLocation = require('../models/UserLocation');
 const getCoordinates = require('../geocode');
 
+/**
+ * Route to get the current user's profile, including preferences and location.
+ * 
+ * This route fetches the current user's details from the JWT token, including preferences and location.
+ * 
+ * @param {Object} req - The request object containing the HTTP request information.
+ * @param {Object} res - The response object to send the HTTP response.
+ */
 router.get('/', async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
 
@@ -31,6 +39,14 @@ router.get('/', async (req, res) => {
     }
 });
 
+/**
+ * Route to update or create user preferences.
+ * 
+ * This route updates the current user's preferences, including musical instruments and music tastes.
+ * 
+ * @param {Object} req - The request object containing the HTTP request information.
+ * @param {Object} res - The response object to send the HTTP response.
+ */
 router.post('/', async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
 
@@ -56,6 +72,15 @@ router.post('/', async (req, res) => {
     }
 });
 
+/**
+ * This route updates the user's location information in the `UserLocation` collection.
+ * It requires authentication via a JWT token in the `Authorization` header.
+ * The route extracts the user's location from the request body, retrieves latitude and longitude using
+ * the `getCoordinates` function, and updates or creates the `UserLocation` entry for the user.
+ *
+ * @param {Object} req.headers - Request headers containing JWT token for authentication
+ * @param {Object} req.body - Request body containing the new location
+ */
 router.post('/updateLocation', async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
 

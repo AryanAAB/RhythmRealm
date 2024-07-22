@@ -90,6 +90,21 @@ router.post('/respond/:id', async (req, res) => {
     }
 });
 
+/**
+ * Route to get all sent messages by the authenticated user.
+ * 
+ * This route requires a valid JWT token for authentication. It extracts the token 
+ * from the Authorization header, verifies it, and uses the decoded user ID to 
+ * identify the sender. The route checks if the sender exists in the database. If 
+ * the sender is found, it retrieves all messages sent by the sender, sorts them 
+ * by the most recently updated, populates the sender and recipient details, and 
+ * sends them in the response. If the token is missing or invalid, if the sender 
+ * is not found, or if there is an error during the retrieval process, it sends an 
+ * appropriate error response.
+ * 
+ * @param {Object} req - The request object containing the HTTP request information.
+ * @param {Object} res - The response object to send the HTTP response.
+ */
 router.get('/sent', async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
 
@@ -117,6 +132,23 @@ router.get('/sent', async (req, res) => {
     }
 });
 
+/**
+ * Route to get all received friend requests for the authenticated user that are 
+ * not yet accepted.
+ * 
+ * This route requires a valid JWT token for authentication. It extracts the token 
+ * from the Authorization header, verifies it, and uses the decoded user ID to 
+ * identify the sender. The route checks if the sender exists in the database. If 
+ * the sender is found, it retrieves all messages where the authenticated user is 
+ * the recipient and the message is not yet accepted, sorts them by the most 
+ * recently updated, populates the sender and recipient details, and sends them 
+ * in the response. If the token is missing or invalid, if the sender is not found, 
+ * or if there is an error during the retrieval process, it sends an appropriate 
+ * error response.
+ * 
+ * @param {Object} req - The request object containing the HTTP request information.
+ * @param {Object} res - The response object to send the HTTP response.
+ */
 router.get('/received', async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
 
@@ -144,6 +176,22 @@ router.get('/received', async (req, res) => {
     }
 });
 
+/**
+ * Route to get all archived friennd requests for the authenticated user.
+ * 
+ * This route requires a valid JWT token for authentication. It extracts the token 
+ * from the Authorization header, verifies it, and uses the decoded user ID to 
+ * identify the sender. The route checks if the sender exists in the database. If 
+ * the sender is found, it retrieves all messages where the authenticated user is 
+ * the recipient and the message has been accepted/declined (i.e., `accepted` is not null), 
+ * sorts them by the most recently updated, populates the sender and recipient details, 
+ * and sends them in the response. If the token is missing or invalid, if the sender 
+ * is not found, or if there is an error during the retrieval process, it sends an 
+ * appropriate error response.
+ * 
+ * @param {Object} req - The request object containing the HTTP request information.
+ * @param {Object} res - The response object to send the HTTP response.
+ */
 router.get('/archived', async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
 

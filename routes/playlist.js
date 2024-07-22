@@ -5,6 +5,21 @@ const Playlist = require('../models/Playlist');
 const Track = require('../models/Track');
 const User = require('../models/User');
 
+/**
+ * Route to create a new playlist for the authenticated user.
+ * 
+ * This route requires a valid JWT token for authentication. It extracts the token 
+ * from the Authorization header, verifies it, and uses the decoded user ID to identify 
+ * the user. If the user is found in the database, the route proceeds to create a new 
+ * playlist with the provided name, description, and track IDs. At least one track ID 
+ * must be provided to create the playlist. The new playlist is then saved to the 
+ * database and returned in the response. If the token is missing or invalid, if the 
+ * user is not found, or if there is an error during the creation process, an appropriate 
+ * error response is sent.
+ * 
+ * @param {Object} req - The request object containing the HTTP request information.
+ * @param {Object} res - The response object to send the HTTP response.
+ */
 router.post('/', async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
 
@@ -36,6 +51,20 @@ router.post('/', async (req, res) => {
     }
 });
 
+/**
+ * Route to get all playlists of the authenticated user.
+ * 
+ * This route requires a valid JWT token for authentication. It extracts the token 
+ * from the Authorization header, verifies it, and uses the decoded user ID to identify 
+ * the user. If the user is found in the database, the route proceeds to retrieve all 
+ * playlists created by the user, populating the track details for each playlist. The 
+ * playlists are then returned in the response. If the token is missing or invalid, if 
+ * the user is not found, or if there is an error during the retrieval process, an 
+ * appropriate error response is sent.
+ * 
+ * @param {Object} req - The request object containing the HTTP request information.
+ * @param {Object} res - The response object to send the HTTP response.
+ */
 router.get('/', async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
 
@@ -56,6 +85,19 @@ router.get('/', async (req, res) => {
     }
 });
 
+/**
+ * Route to update an existing playlist.
+ * 
+ * This route updates the details of a specified playlist using the provided playlist ID.
+ * It validates the request body to ensure that at least one track is included in the 
+ * updated playlist. The playlist is then updated with the new name, description, and 
+ * track IDs, and the updated playlist is populated with track details before being 
+ * returned in the response. If there is an error during the update process, an 
+ * appropriate error response is sent.
+ * 
+ * @param {Object} req - The request object containing the HTTP request information.
+ * @param {Object} res - The response object to send the HTTP response.
+ */
 router.put('/:id', async (req, res) => {
     try {
         const { name, description, trackIds } = req.body;
@@ -76,6 +118,18 @@ router.put('/:id', async (req, res) => {
     }
 });
 
+/**
+ * Route to add a new track.
+ * 
+ * This route adds a new track to the database. It first verifies the user's JWT token 
+ * and ensures the user exists. If the user is authenticated and exists, it proceeds 
+ * to create a new track with the provided title, artist, album, and URL, and saves 
+ * it to the database. The newly created track is then returned in the response. If 
+ * there is an error during the process, an appropriate error response is sent.
+ * 
+ * @param {Object} req - The request object containing the HTTP request information.
+ * @param {Object} res - The response object to send the HTTP response.
+ */
 router.post('/tracks', async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
 
@@ -98,6 +152,18 @@ router.post('/tracks', async (req, res) => {
     }
 });
 
+/**
+ * Route to delete a track by its ID.
+ * 
+ * This route deletes a track from the database based on the provided track ID. It first 
+ * verifies the user's JWT token and ensures the user exists. If the user is authenticated 
+ * and exists, it proceeds to delete the track with the specified ID from the database. 
+ * A success message is returned in the response if the deletion is successful. If there 
+ * is an error during the process, an appropriate error response is sent.
+ * 
+ * @param {Object} req - The request object containing the HTTP request information.
+ * @param {Object} res - The response object to send the HTTP response.
+ */
 router.delete('/tracks/:trackId', async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
 
