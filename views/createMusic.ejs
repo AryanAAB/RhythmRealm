@@ -158,6 +158,17 @@
             box-shadow: 0 0 0 2px rgba(235, 3, 208, 0.5);
             color: #fff;
         }
+
+        #canvas-container {
+            display: none;
+            margin-top: 20px;
+            justify-content: center;
+            align-items: center;
+        }
+        #canvas {
+            border: 2px solid #333;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -263,8 +274,22 @@
         <button type="button" onclick="clearNotes()" class="button">Clear Notes</button>
         <button type="button" onclick="saveMusic()" class="button">Save Your Music</button>
         <button type="button" onclick="saveGeneratedMusic()" class="button">Save Generated Music</button>
-   
+        
+        <div id="canvas-container">
+            <h3>Your Music Visualization</h3>
+            <canvas id="canvas" width="800" height="400"></canvas>
+        </div>
+        
+        <div class="footer">
+            <p>&copy; 2024 Rhythm Realm. All rights reserved.</p>
+        </div>
     <script>
+        let userNotes = [];
+        let generatedMusic = null;
+        let currentStartTime = 0.0;
+        let currentEndTime = 0.5;
+        const canvas = document.getElementById('canvas');
+
         window.onload = async function() {
             document.getElementById('spinnerContainer').style.display = 'flex';
 
@@ -279,6 +304,8 @@
                 if (!response.ok) {
                     throw new Error('Failed to fetch profile');
                 }
+
+                checkCanvas();
                 document.getElementById('spinnerContainer').style.display = 'none';
             } catch (error) {
                 localStorage.setItem('failed', true);
@@ -286,11 +313,22 @@
                 window.location.href = '/';
             }
         };
-        let userNotes = [];
-        let generatedMusic = null;
-        let rnnPlayer = new mm.Player();
-        let currentStartTime = 0.0;
-        let currentEndTime = 0.5;
+
+        function checkCanvas() {
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
+            const canvasContainer = document.getElementById('canvas-container');
+
+            // Check if the canvas is empty
+            const empty = context.getImageData(0, 0, canvas.width, canvas.height).data.every(value => value === 0);
+
+            if (empty) {
+                canvasContainer.style.display = 'none';
+            } else {
+                canvasContainer.style.display = 'block';
+                canvasContainer.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
 
         function addNote() {
             try {
@@ -371,10 +409,17 @@
                     ],
                     notes: userNotes,
                 };
-
+                
+                const visualizer = new mm.Visualizer(noteSequence, canvas);
+                checkCanvas();
+                let rnnPlayer = new mm.Player(false, {
+                    run: (note) => visualizer.redraw(note),
+                    stop: () => {}
+                });
                 await rnnPlayer.start(noteSequence);
                 toastr.success("Played the sequence.");
             } catch (error) {
+                console.log(error);
                 toastr.error("An error occurred while playing the sequence.");
             }
         }
@@ -398,6 +443,12 @@
                 const rnn_temperature = temp;
 
                 generatedMusic = await music_rnn.continueSequence(qns, rnn_steps, rnn_temperature);
+                const visualizer = new mm.Visualizer(generatedMusic, canvas);
+                checkCanvas();
+                let rnnPlayer = new mm.Player(false, {
+                    run: (note) => visualizer.redraw(note),
+                    stop: () => {}
+                });
                 await rnnPlayer.start(generatedMusic);
                 toastr.success("Played the next sequence.");
             } catch(error) {
