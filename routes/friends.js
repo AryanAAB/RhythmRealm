@@ -4,6 +4,20 @@ const jwt = require('jsonwebtoken');
 const User = require("../models/User");
 const UserFriends = require("../models/UserFriends");
 
+/**
+ * Route to send a friend request to a recipient user.
+ * 
+ * This route requires a valid JWT token for authentication. It extracts the token 
+ * from the Authorization header, verifies it, and uses the decoded user ID to 
+ * identify the sender. The route checks if the sender and the recipient exist in 
+ * the database. If both users are found, it creates a new message and saves it 
+ * to the database. If the token is missing or invalid, if the sender or recipient 
+ * is not found, or if there is an error during the message sending process, it 
+ * sends an appropriate error response.
+ * 
+ * @param {Object} req - The request object containing the HTTP request information.
+ * @param {Object} res - The response object to send the HTTP response.
+ */ 
 router.post('/', async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
 
@@ -37,6 +51,20 @@ router.post('/', async (req, res) => {
     }
 });
 
+/**
+ * Route to respond to a friend request by its ID.
+ * 
+ * This route requires a valid JWT token for authentication. It extracts the token 
+ * from the Authorization header, verifies it, and uses the decoded user ID to 
+ * identify the sender. The route checks if the sender exists in the database. If 
+ * the sender is found, it updates the acceptance status of the specified message 
+ * and saves the changes to the database. If the token is missing or invalid, if 
+ * the sender or message is not found, or if there is an error during the response 
+ * process, it sends an appropriate error response.
+ * 
+ * @param {Object} req - The request object containing the HTTP request information.
+ * @param {Object} res - The response object to send the HTTP response.
+ */
 router.post('/respond/:id', async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
 

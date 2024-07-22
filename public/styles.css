@@ -603,7 +603,7 @@ form#noteForm {
     background-color: #f9f9f9;
     margin-bottom: 20px;
     max-width: 500px;
-    margin: 0 auto; /* Center the form */
+    margin: 0 auto;
 }
 
 form#noteForm h3 {

@@ -4,6 +4,19 @@ const jwt = require('jsonwebtoken');
 const Event = require("../models/Event");
 const User = require("../models/User");
 
+/**
+ * Route to get the current and archived events.
+ * 
+ * This route requires a valid JWT token for authentication. It fetches events 
+ * from the database where the event date is in the future (current events) and 
+ * where the event date is in the past or present (archived events). The events 
+ * are populated with the details of the user who created them and the users who 
+ * have RSVPed. The response includes the current and archived events, as well as 
+ * the ID of the authenticated user.
+ * 
+ * @param {Object} req - The request object containing the HTTP request information.
+ * @param {Object} res - The response object to send the HTTP response.
+ */
 router.get('/', async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
     if (!token) {
@@ -27,6 +40,20 @@ router.get('/', async (req, res) => {
 
 });
 
+/**
+ * Route to create a new event.
+ * 
+ * This route requires a valid JWT token for authentication. It extracts the token 
+ * from the Authorization header, verifies it, and uses the decoded user ID to set 
+ * the creator of the event. It then creates a new event with the provided details 
+ * (name, location, type of people required, date and time, additional info) and 
+ * saves it to the database. If successful, it responds with the created event. 
+ * If the token is missing or invalid, or if there is an error creating the event, 
+ * it sends an appropriate error response.
+ * 
+ * @param {Object} req - The request object containing the HTTP request information.
+ * @param {Object} res - The response object to send the HTTP response.
+ */ 
 router.post('/', async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
     if (!token) {
@@ -56,6 +83,20 @@ router.post('/', async (req, res) => {
     }
 });
 
+/**
+ * Route to delete an event by its ID.
+ * 
+ * This route requires a valid JWT token for authentication. It extracts the token 
+ * from the Authorization header, verifies it, and uses the decoded user ID to 
+ * authorize the deletion of the event. The route checks if the event exists and 
+ * if the requesting user is the creator of the event. If both conditions are met, 
+ * it deletes the event from the database and responds with a success message. If 
+ * the token is missing or invalid, if the event is not found, or if the user is 
+ * not authorized to delete the event, it sends an appropriate error response.
+ * 
+ * @param {Object} req - The request object containing the HTTP request information.
+ * @param {Object} res - The response object to send the HTTP response.
+ */ 
 router.delete('/:id', async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
     if (!token) {
@@ -84,6 +125,22 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
+/**
+ * Route to RSVP for an event by its ID.
+ * 
+ * This route requires a valid JWT token for authentication. It extracts the token 
+ * from the Authorization header, verifies it, and uses the decoded user ID to 
+ * add the user to the RSVPs list of the specified event. The route checks if the 
+ * event exists and if the user has not already RSVPed for the event. If the 
+ * conditions are met, it adds the user to the RSVPs list and saves the event. 
+ * It also verifies that the user exists in the database and responds with a 
+ * success message including the username. If the token is missing or invalid, 
+ * if the event or user is not found, or if there is an error during the RSVP 
+ * process, it sends an appropriate error response.
+ * 
+ * @param {Object} req - The request object containing the HTTP request information.
+ * @param {Object} res - The response object to send the HTTP response.
+ */ 
 router.post('/:id/rsvp', async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
     if (!token) {
