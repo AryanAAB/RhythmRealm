@@ -39,7 +39,7 @@ Rhythm Relam is a dynamic music application that allows uers to create and displ
 3. Set up environment variables:
     - Create a `.env` file in the root directory.
     - Add the following variables:
-``plaintext
+```plaintext
 PORT=3000
 MONGODB_URI=your_mongodb_uri
 JWT_SECRET=your_jwt_secret
