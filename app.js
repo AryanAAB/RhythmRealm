@@ -85,9 +85,8 @@ mongoose.connect(MONGODB_URI, {})
     process.exit(1);
   });
 
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Internal Server Error' });
+  app.use((req, res) => {
+    res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
 });
 
 process.on('unhandledRejection', (err, promise) => {
