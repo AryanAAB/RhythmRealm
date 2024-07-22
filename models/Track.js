@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 /**
- * Creates an track schema that specifies the structure of an music track document in MongoDB.
+ * Creates a track schema that specifies the structure of a music track document in MongoDB.
  * 
  * This schema defines the fields and their types, along with any necessary validation
  * rules for the music track collection in the database. Each track has a title, and 
