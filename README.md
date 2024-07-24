@@ -115,15 +115,22 @@ Make sure you have a database in MongoDB Atlas, OpenCage Geocoding, and Agora.io
     npm start
 ```
 
-## Usage
+## Implementation Details
 
-1. **Registration and Login**: Users can register and login to access the app's features.
-2. **Profile Management**: Users can update their music preferences and location on their profile page.
-3. **Add Friends**: Users can find people with similar music tastes.
-4. **Event Management**: Users can create, update, delete, and RSVP to events.
-5. **Playlist Management**: Users can create playlists and add tracks.
-6. **Real-Time Jam Sessions**: Users can participate in virtual jam sessions with real-time audio streaming using Agora.io. 
-7. **Generate Music**: Users can generate and visualize their own music sequences.
+### API Endpoints
+
+1) **Authentication**
+    - `POST /auth/signup`: Register a new user
+    - `POST /auth/login`: Login a user
+
+2) **Users**
+    - `GET /api/users/`: Gets a list of all the users
+    - 
+3) **Event**
+    - `GET /api/events/`: Gets all the events
+    - `POST /api/events/`: Creates a new event
+    - `DELETE /api/events/:id`: Deletes an event by ID
+    -  `
 
 ## References
 1. Video Conference Room: https://www.youtube.com/watch?v=HX6AM_1-jNM 
