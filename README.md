@@ -181,5 +181,21 @@ Make sure you have a database in MongoDB Atlas, OpenCage Geocoding, and Agora.io
 
     The `Track` model represents the music tracks in a playlist. It includes the title, artist, album, and url of the music track.
 
+## Challenges
+
+- Designing an intuitive user interface that can cater to both tech-savvy musicians and those less familiar with digital platforms.
+- Ensuring a seamless user experience while offering a range of features such as customizable profiles, playlist management, and event creation.
+- Implementing real-time audio streaming with Agora.io and ensuring high-quality, low-latency audio streaming.
+- Using Magenta.js to allow users to create their own music sequences.
+- Encouraging user interaction and fostering a sense of community among musicians, which involved not only technical solutions but also strategic community management and engaging activities.
+
+## Future Scope
+
+- **Enhanced Social Features**: Introduce features such as direct messaging, group chats, and forums to foster deeper interactions and collaborations among users.
+- **Global Collaboration Projects**: Launching features that facilitate large-scale collaborative projects, such as virtual bands and online orchestras.
+- **Educational Resources**: Developing a comprehensive library of music tutorials, courses, and resources to support users in honing their skills and learning new techniques.
+- **Localization**: Expanding the app's reach by localizing it into multiple languages and adapting features to cater to different cultural music preferences.
+
 ## References
-1. Video Conference Room: https://www.youtube.com/watch?v=HX6AM_1-jNM 
+1. Video Conference: https://www.youtube.com/watch?v=HX6AM_1-jNM
+2. Magenta.js Documnetation: https://hello-magenta.glitch.me/
