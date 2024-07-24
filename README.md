@@ -29,33 +29,33 @@ Rhythm Realm is a dynamic and interactive music-making website designed to bring
 
 ## Key Features
 
-1) User Authentication and Profiles
-- Secure user registration and login using JWT.
-- Comprehensive user profiles displaying instruments played, vocal skills, and music listening preferences.
-- Options to update and manage personal music preferences easily.
+1) **User Authentication and Profiles**
+    - Secure user registration and login using JWT.
+    - Comprehensive user profiles displaying instruments played, vocal skills, and music listening preferences.
+    - Options to update and manage personal music preferences easily.
 
-2) Music Preferences and Instrument Categories
-- Categorized checkboxes for different types of music instruments and listening tastes.
-- Expandable catageories for detailed selection and easy navigation.
+2) **Music Preferences and Instrument Categories**
+    - Categorized checkboxes for different types of music instruments and listening tastes.
+    - Expandable catageories for detailed selection and easy navigation.
 
-3) Playlist Management
-- Create and manage personalized playlists with an intuitive interface.
-- Add tracks to playlists with options to select from a variety of music tracks.
+3) **Playlist Management**
+    - Create and manage personalized playlists with an intuitive interface.
+    - Add tracks to playlists with options to select from a variety of music tracks.
 
-4) Event Management
-- Create, update, and manage music-related events.
-- RSVP to events and see who else is attending.
+4) **Event Management**
+    - Create, update, and manage music-related events.
+    - RSVP to events and see who else is attending.
 
-5) Music Collaboration
-- Post friend requests for musicians to jam with and find collaborators based on music preferences.
+5) **Music Collaboration**
+    - Post friend requests for musicians to jam with and find collaborators based on music preferences.
 
-6) Real-Time Interaction
-- Real-time user interaction with Agora.io.
+6) **Real-Time Interaction**
+    - Real-time user interaction with Agora.io.
 
-7) Music Generation and Visualization
-- Generate new music sequences from a given sequence using Magenta.js.
-- Visualize generated music in a user-friendly interface.
-- Download the music generated.
+7) **Music Generation and Visualization**
+    - Generate new music sequences from a given sequence using Magenta.js.
+    - Visualize generated music in a user-friendly interface.
+    - Download the music generated.
 
 ## Installation
 
