@@ -27,6 +27,36 @@ Rhythm Realm is a dynamic and interactive music-making website designed to bring
 - **Real-Time Communication**: Agora.io
 - **Music Generation and Visualization**: Magenta.js
 
+## Key Features
+
+1) User Authentication and Profiles
+- Secure user registration and login using JWT.
+- Comprehensive user profiles displaying instruments played, vocal skills, and music listening preferences.
+- Options to update and manage personal music preferences easily.
+
+2) Music Preferences and Instrument Categories
+- Categorized checkboxes for different types of music instruments and listening tastes.
+- Expandable catageories for detailed selection and easy navigation.
+
+3) Playlist Management
+- Create and manage personalized playlists with an intuitive interface.
+- Add tracks to playlists with options to select from a variety of music tracks.
+
+4) Event Management
+- Create, update, and manage music-related events.
+- RSVP to events and see who else is attending.
+
+5) Music Collaboration
+- Post friend requests for musicians to jam with and find collaborators based on music preferences.
+
+6) Real-Time Interaction
+- Real-time user interaction with Agora.io.
+
+7) Music Generation and Visualization
+- Generate new music sequences from a given sequence using Magenta.js.
+- Visualize generated music in a user-friendly interface.
+- Download the music generated.
+
 ## Installation
 
 Make sure you have a database in MongoDB Atlas, OpenCage Geocoding, and Agora. You can create one by visiting the following links.
@@ -73,8 +103,6 @@ Make sure you have a database in MongoDB Atlas, OpenCage Geocoding, and Agora. Y
 5. **Playlist Management**: Users can create playlists and add tracks.
 6. **Real-Time Jam Sessions**: Users can participate in virtual jam sessions with real-time audio streaming using Agora.io. 
 7. **Generate Music**: Users can generate and visualize their own music sequences.
-
-## 
 
 ## References
 1. Video Conference Room: https://www.youtube.com/watch?v=HX6AM_1-jNM 
