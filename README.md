@@ -1,32 +1,38 @@
 # Rhythm Realm
 
-Rhythm Realm is a dynamic and interactive music-making website designed to bring musicians and music enthusiasts together. The platform allows users to create detailed music profiles, showcasing their instruments, vocal skills, and music listening tastes. With features for discovering like-minded individuals, sharing music preferences, participating in music projects and events, creating new playlists, and generating their own music sequences, Rhythm Realm aims to foster a vvibrant community of music lovers.
+Rhythm Realm is a dynamic and interactive music-making website designed to bring musicians and music enthusiasts together. The platform allows users to create detailed music profiles and showcase their instruments, vocal skills, and music listening tastes. With features for discovering like-minded individuals, sharing music preferences, participating in music projects and events, meeting in virtual jam sessions with real-time audio streaming, creating new playlists, and generating one's own music sequences, Rhythm Realm aims to foster a vibrant community of music lovers.
 
 ## Table of Contents
 
-- [Features](#features)
+- [Objectives](#objectives)
 - [Technology Stack](#technology-stack)
 - [Installation](#installation)
 - [Usage](#usage)
 - 
-## Features
+## Objectives
 
-- **User Authentication**: Secure registration and login with JWT and MongoDB.
-- **User Location**: Users can share their locations for events/friend requests using GEOCODE.
-- **Profile Management**: Users can create and update their music profiles including instruments/vocal skills and music listening tastes. 
-- **Jam Mates**: Users can find people with similar music tastes.
-- **Playlist Management**: Users can create playlists and add tracks.
-- **Event Management**: Users can create, update, delete, and RSVP to events by posting if they are looking for a drummer, guitarist, singer, etc. to jam with.
-- **Music Generation and Visualization**: Users can generate their own music sequences from an initial prompt and visualize the music as it plays.
+- Provide a platform for users to create detailed music profiles.
+- Facilitate the discovery of musicians with similar interests.
+- Enable users to organize and participate in music events.
+- Allow users to create and share playlists.
+- Integrate real-time audio streaming for virtual jam sessions.
+- Offer generative tools for music sequences.
 
 ## Technology Stack
 
 - **Backend**: Node.js, Express.js, JavaScript, MongoDB (with Mongoose for ORM), GEOCODE (for user location services)
 - **Frontend**: EJS templating, HTML, CSS, JavaScript
 - **Authentication**: JWT (JSON Web Token)
+- **Real-Time Communication**: Agora.io
 - **Music Generation and Visualization**: Magenta.js
 
 ## Installation
+
+Make sure you have a database in MongoDB Atlas, OpenCage Geocoding, and Agora. You can create one by visiting the following links.
+
+[MongoDB Atlas](https://www.mongodb.com/atlas)
+[OpenCage Geocoding](https://opencagedata.com/api)
+[Agora](https://www.agora.io/en/)
 
 1. Clone the repository: 
 ```bash
@@ -44,9 +50,12 @@ Rhythm Realm is a dynamic and interactive music-making website designed to bring
     - Add the following variables:
 ```plaintext
     PORT=3000
-    JWT_SECRET=YOUR_SECRET_KEY
-    MONGODB_URI=YOUR_MONGDB_URI
-    GEOCODE_KEY=YOUR_GEOCODE_KEY
+    JWT_SECRET=YOUR_JWT_SECRET
+    MONGODB_URI=YOUR_MONGODB_URI
+    GEOCODE_KEY=YOUR_OPENCAGE_KEY
+    APP_ID=YOUR_AGORA_APP_ID 
+    TOKEN=YOUR_AGORA_APP_TOKEN
+    CHANNEL=YOUR_AGORA_APP_CHANNEL
 ```
 
 4. Start the application: 
