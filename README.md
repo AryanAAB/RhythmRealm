@@ -120,17 +120,36 @@ Make sure you have a database in MongoDB Atlas, OpenCage Geocoding, and Agora.io
 ### API Endpoints
 
 1) **Authentication**
-    - `POST /auth/signup`: Register a new user
-    - `POST /auth/login`: Login a user
+    - `POST /auth/signup/`: Register a new user
+    - `POST /auth/login/`: Login a user
 
 2) **Users**
     - `GET /api/users/`: Gets a list of all the users
-    - 
-3) **Event**
+
+3) **Profile**: 
+    - `GET /api/profile/`: Gets all the details about the user
+    - `POST /api/profile/`: Updates the user profile
+    - `POST /api/profile/updateLocation/`: Updates the user location
+
+4) **Friends**
+    - `POST /api/friends/`: Sends a new friend request
+    - `POST /api/friends/respond/:id/`: Responds to a friend request
+    - `GET /api/friends/sent/`: Gets all the friend requests that the user sent
+    - `GET /api/friends/received/`: Gets all the friend requests that the user receives
+    - `GET /api/friends/archived/`: Gets all the friend requests that are archived 
+
+5) **Event**
     - `GET /api/events/`: Gets all the events
     - `POST /api/events/`: Creates a new event
-    - `DELETE /api/events/:id`: Deletes an event by ID
-    -  `
+    - `DELETE /api/events/:id/`: Deletes an event by ID
+    -  `POST /api/events/:id/rsvp/`: RSVP to an event by ID
+
+6) **Playlist**
+    - `POST /api/playlists/`: Creates a new playlist for a user
+    - `GET /api/playlists/`: Gets all the playlists for a user
+    - `PUT /api/playlists/:id/`: Updates a playlist by ID
+    - `POST /api/playlists/tracks/`: Creates a new music track
+    - `DELETE /api/playlists/tracks/:trackID/`: Deletes a music track by ID 
 
 ## References
 1. Video Conference Room: https://www.youtube.com/watch?v=HX6AM_1-jNM 
