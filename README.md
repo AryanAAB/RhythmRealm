@@ -6,9 +6,12 @@ Rhythm Realm is a dynamic and interactive music-making website designed to bring
 
 - [Objectives](#objectives)
 - [Technology Stack](#technology-stack)
+- [Frameworks Used](#frameworks-used)
+- [Key Features](#key-features)
 - [Installation](#installation)
 - [Usage](#usage)
-- 
+- [References](#references)
+
 ## Objectives
 
 - Provide a platform for users to create detailed music profiles.
@@ -26,6 +29,24 @@ Rhythm Realm is a dynamic and interactive music-making website designed to bring
 - **User Location Services**: OpenCage Geocoding
 - **Real-Time Communication**: Agora.io
 - **Music Generation and Visualization**: Magenta.js
+
+## Frameworks Used
+
+1) MongoDB
+    
+    MongoDB is a NoSQL database known for its flexibility and scalability. **In Rhythm Realm, MongoDB is used to store various types of data including user profiles, music preferences, playlists, and events.** Its schema-less nature allows for easy modification and scaling as the application grows.
+
+2) Agora
+    
+    Agora is a real-time audio and video communication service. **In Rhythm Realm, Agora is used to facilitate real-time audio streaming for live music sessions and virtual events.** Its low latency and high-quality audio capabilities ensure a seamless and interactive experience for users. By integrating Agora, the platform can provide robust audio communication features, enhancing the collaborative aspects of the music-making process.
+
+3) OpenCage Geocoding
+
+    OpenCage Geocoding is a service that converts addresses into geographic coordinates. **Rhythm Realm utilizes OpenCage Geocoding to enable location-based features such as finding nearby musicians to jam with.** By integrating this service, the platform can offer personalized location-based recommendations and enahnce the user experience with accurate geolocation data.
+
+4) Magenta.js
+
+    Magenta.js is a JavaScript library for creating music with machine learning. **In Rhythm Realm, Magenta.js is used for generating and visualizing music sequences.** The library helps uses generate new musical data based on the input data. This adds a creative and innovative dimension to the platform, allowing users to explore and visualize music in unique ways. 
 
 ## Key Features
 
@@ -59,7 +80,7 @@ Rhythm Realm is a dynamic and interactive music-making website designed to bring
 
 ## Installation
 
-Make sure you have a database in MongoDB Atlas, OpenCage Geocoding, and Agora. You can create one by visiting the following links.
+Make sure you have a database in MongoDB Atlas, OpenCage Geocoding, and Agora.io. You can create one by visiting the following links.
 
 - [MongoDB Atlas](https://www.mongodb.com/atlas)
 - [OpenCage Geocoding](https://opencagedata.com/api)
