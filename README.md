@@ -149,7 +149,37 @@ Make sure you have a database in MongoDB Atlas, OpenCage Geocoding, and Agora.io
     - `GET /api/playlists/`: Gets all the playlists for a user
     - `PUT /api/playlists/:id/`: Updates a playlist by ID
     - `POST /api/playlists/tracks/`: Creates a new music track
-    - `DELETE /api/playlists/tracks/:trackID/`: Deletes a music track by ID 
+    - `DELETE /api/playlists/tracks/:trackID/`: Deletes a music track by ID
+
+### Models
+
+1) **User**
+
+    The `User` model represents a user in the system. It includes fields for username, email, password, and preferences. The preferences field refrence the `UserPreference` model.
+
+2) **UserPreference**
+    
+    The `UserPreference` model contains additional information about the user such as music tastes and preferred instruments. It references the `User` model.
+
+3) **UserLocation**
+
+    The `UserLocation` model contains information about the location of the user including address, latitude, and longitude. It references the `User` model.
+
+4) **UserFriends**
+
+    The `UserFriends` model contains information about the friend request message including sender, recipient, message, and whether the request was accepted or not. It references the `User` model.
+
+5) **Event**
+
+    The `Event` model represents an event created by a user. It includes fields for the event's name, location, type of people required, date and time, additional information, the creator of the event, and RSVPs. It references the `User` model.
+
+6) **Playlist**
+
+    The `Playlist` model allows users to create and manage playlists. It includes fields for the playlist's name, description, tracks, and the creator. It references the `User` and the `Track` models.
+
+7) **Track**
+
+    The `Track` model represents the music tracks in a playlist. It includes the title, artist, album, and url of the music track.
 
 ## References
 1. Video Conference Room: https://www.youtube.com/watch?v=HX6AM_1-jNM 
