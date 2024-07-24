@@ -73,6 +73,16 @@ app.get('/createMusic', (req, res) => {
   res.render('createMusic');
 });
 
+app.get('/meetingRoom', (req, res) => {
+  const data = {
+    appid: process.env.APP_ID,
+    token: process.env.TOKEN,
+    channel: process.env.CHANNEL
+  };
+
+  res.render('meetingRoom', data);
+});
+
 mongoose.connect(MONGODB_URI, {})
   .then(() => {
     console.log('Connected to MongoDB');

@@ -213,6 +213,28 @@
             box-shadow: 0 0 0 2px rgba(235, 3, 208, 0.5);
             color: #fff;
         }
+
+        .custom-colored-btn2 {
+            background-color: #ff6f00;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        .custom-colored-btn2:hover {
+            background-color: #e65c00;
+            color: #ffffff;
+        }
+
+        .custom-colored-btn2:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 111, 0, 0.5);
+            color: #ffffff;
+        }
     </style>
 </head>
 <body>
@@ -240,6 +262,11 @@
                         <li>
                             <button id="messagesButton" class="btn btn-warning">
                                 <i class="fas fa-bell"></i> Notifications
+                            </button>
+                        </li>
+                        <li>
+                            <button id="joinMeetingRoomButton" class="btn custom-colored-btn2">
+                                <i class="fas fa-headphones"></i> Join Meeting Room
                             </button>
                         </li>
                         <li>
@@ -696,6 +723,9 @@
         });
         document.getElementById('createMusicButton').addEventListener('click', () => {
             window.location.href = '/createMusic';
+        });
+        document.getElementById('joinMeetingRoomButton').addEventListener('click', () => {
+            window.location.href = '/meetingRoom';
         });
     </script>
 </body>
