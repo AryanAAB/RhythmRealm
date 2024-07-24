@@ -353,6 +353,12 @@
                 document.getElementById('location').value = data.location;
                 const preferences = data.preferences || { instruments: [], musicTastes: [] };
                 renderPreferencesForm(preferences);
+
+                if(localStorage.getItem('message')){
+                    toastr.error(localStorage.getItem('message'));
+                    localStorage.removeItem('message');
+                }
+                
             } catch (error) {
                 localStorage.setItem('failed', true);
                 window.location.href = '/';

@@ -231,10 +231,17 @@
                 throw new Error('Failed to fetch profile');
             }
 
-            await joinMeetingRoom();
-            
+            try{
+                await joinMeetingRoom();
+            } catch(error){
+                document.getElementById('spinnerContainer').style.display = 'none';
+                localStorage.setItem('message', "Mic and Camera Configuration Failed.");
+                window.location.href = '/profile';    
+            }
+
             document.getElementById('spinnerContainer').style.display = 'none';
         } catch (error) {
+            console.log(error);
             localStorage.setItem('failed', true);
             document.getElementById('spinnerContainer').style.display = 'none';
             window.location.href = '/';

@@ -42,7 +42,7 @@ Rhythm Realm is a dynamic and interactive music-making website designed to bring
 
 3) OpenCage Geocoding
 
-    OpenCage Geocoding is a service that converts addresses into geographic coordinates. **Rhythm Realm utilizes OpenCage Geocoding to enable location-based features such as finding nearby musicians to jam with.** By integrating this service, the platform can offer personalized location-based recommendations and enahnce the user experience with accurate geolocation data.
+    OpenCage Geocoding is a service that converts addresses into geographic coordinates. **In Rhythm Realm, OpenCage Geocoding is used to enable location-based features such as finding nearby musicians to jam with.** By integrating this service, the platform can offer personalized location-based recommendations and enahnce the user experience with accurate geolocation data.
 
 4) Magenta.js
 
