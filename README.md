@@ -192,11 +192,20 @@ Make sure you have a database in MongoDB Atlas, OpenCage Geocoding, and Agora.io
 
 ## Challenges
 
-- Designing an intuitive user interface that can cater to both tech-savvy musicians and those less familiar with digital platforms.
-- Ensuring a seamless user experience while offering a range of features such as customizable profiles, playlist management, and event creation.
-- Implementing real-time audio streaming with Agora.io and ensuring high-quality, low-latency audio streaming.
-- Using Magenta.js to allow users to create their own music sequences.
+1) Designing an intuitive user interface that can cater to both tech-savvy musicians and those less familiar with digital platforms.
+    - The UI/UX of Rhythm Realm is simple and intuitive with the help of an hamburger menubar connecting all the different pages.
+
+2) Ensuring a seamless user experience while offering a range of features such as customizable profiles, playlist management, and event creation.
+    - Looking at different websites and seeing how they implemented their various features in order to gain inspiration from them.
+    
+3) Implementing real-time audio streaming with Agora.io and ensuring high-quality, low-latency audio streaming.
+    - Researching on how to create a real-time audio streaming service by looking at various documentations and videos.
+
+- Using AI  to allow users to create their own music sequences.
+    - Resarching on AI Generation and exploring various options before settling with Magenta.js.
+
 - Encouraging user interaction and fostering a sense of community among musicians, which involved not only technical solutions but also strategic community management and engaging activities.
+    - Allowing users to manage events and send friend requests helps in connecting individuals across the world.
 
 ## Future Scope
 
