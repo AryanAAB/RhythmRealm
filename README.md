@@ -4,13 +4,22 @@ Rhythm Realm is a dynamic and interactive music-making website designed to bring
 
 ## Table of Contents
 
+- [Problem Statement](#problem-statement)
 - [Objectives](#objectives)
 - [Technology Stack](#technology-stack)
 - [Frameworks Used](#frameworks-used)
 - [Key Features](#key-features)
 - [Installation](#installation)
-- [Usage](#usage)
+- [Implementation Details](#implementation-details)
+    - [API Endpoints](#api-endpoints)
+    - [Models](#models)
+- [Challenges](#challenges)
+- [Future Scope](#future-scope)
 - [References](#references)
+
+## Problem Statement
+
+In today's digital age, musicians and music enthusiasts often struggle to find like-minded individuals to collaborate with, share their music journeys, and discover new opportunities. For example, musicians face several challenges including isolation, limited collaboration tools, event management, and discoverability. Rhythm Realm aims to address these challenges by creating a comprehensive, user-friendly platform that brings together musicians and music lovers from around the world. By offering a range of features such as customizable profiles, real-time audio streaming, event management, and personalized recommendations, Rhythm Realm seeks to foster a vibrant, supportive, and collaborative music community where users can thrive and grow together.
 
 ## Objectives
 
