@@ -7,6 +7,7 @@ const usersRoute = require('./routes/users');
 const friendsRoute = require('./routes/friends');
 const eventsRoute = require('./routes/event');
 const playlistRoute = require('./routes/playlist');
+const nocache = require('nocache');
 
 const verifyToken = require('./middleware/auth');
 require('dotenv').config();
@@ -21,6 +22,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(nocache());
 
 app.use('/auth', authRoutes);
 app.use('/api/profile', verifyToken, profileRoute);
