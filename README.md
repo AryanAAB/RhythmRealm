@@ -121,7 +121,7 @@ Make sure you have a database in MongoDB Atlas, OpenCage Geocoding, and Agora.io
 
 4. Start the application: 
 ```bash
-    npm start
+    node app.js
 ```
 
 ## Implementation Details
