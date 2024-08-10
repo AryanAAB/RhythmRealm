@@ -216,7 +216,7 @@ Make sure you have a database in MongoDB Atlas, OpenCage Geocoding, and Agora.io
 
 ## Demo Video
 
-You can see the demo video at !(Rhythm Realm)[https://studio.youtube.com/channel/UCWcCGz5xaA9Q2Cf6xCuJ3qQ/videos/upload?filter=%5B%5D&sort=%7B%22columnType%22%3A%22date%22%2C%22sortOrder%22%3A%22DESCENDING%22%7D]
+You can see the demo video at https://youtu.be/yNARLZx4ZwM
 
 ## References
 1. Video Conference: https://www.youtube.com/watch?v=HX6AM_1-jNM
