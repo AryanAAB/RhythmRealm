@@ -214,6 +214,10 @@ Make sure you have a database in MongoDB Atlas, OpenCage Geocoding, and Agora.io
 - **Educational Resources**: Developing a comprehensive library of music tutorials, courses, and resources to support users in honing their skills and learning new techniques.
 - **Localization**: Expanding the app's reach by localizing it into multiple languages and adapting features to cater to different cultural music preferences.
 
+## Demo Video
+
+You can see the demo video at !(Rhythm Realm)[https://studio.youtube.com/channel/UCWcCGz5xaA9Q2Cf6xCuJ3qQ/videos/upload?filter=%5B%5D&sort=%7B%22columnType%22%3A%22date%22%2C%22sortOrder%22%3A%22DESCENDING%22%7D]
+
 ## References
 1. Video Conference: https://www.youtube.com/watch?v=HX6AM_1-jNM
 2. Magenta.js Documnetation: https://hello-magenta.glitch.me/
